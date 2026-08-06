@@ -1,0 +1,30 @@
+{
+  "name": "tagum-pickleball-finder",
+  "version": "1.0.0",
+  "description": "Full-stack pickleball court finder for Tagum City",
+  "private": true,
+  "workspaces": [
+    "shared",
+    "backend",
+    "frontend"
+  ],
+  "overrides": {
+    "react": "19.2.3"
+  },
+  "scripts": {
+    "install:all": "npm install",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --workspace @tagum-pickleball/frontend run start --",
+    "dev": "npm run dev:backend",
+    "build:shared": "npm --prefix shared run build",
+    "build:backend": "npm --prefix backend run build",
+    "build:all": "npm run build:shared && npm run build:backend",
+    "start": "npm --prefix backend run start",
+    "lint:backend": "npm --prefix backend run lint",
+    "typecheck:backend": "npm --prefix backend run typecheck",
+    "typecheck:frontend": "npm --prefix frontend run typecheck"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

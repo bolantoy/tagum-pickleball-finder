@@ -1,0 +1,63 @@
+# ─── Dependencies ─────────────────────────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+
+# ─── Build Outputs ────────────────────────────────────────────────────────────
+dist/
+build/
+*.tsbuildinfo
+
+# ─── Environment ──────────────────────────────────────────────────────────────
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ─── Expo / React Native ──────────────────────────────────────────────────────
+.expo/
+.expo-shared/
+.expo-verify-export/
+web-build/
+
+# Metro cache
+.metro-cache/
+
+# Expo export
+*.expo
+
+# ─── iOS / Android ────────────────────────────────────────────────────────────
+ios/
+android/
+*.ipa
+*.apk
+*.aab
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ─── Editor ───────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ─── Playwright ───────────────────────────────────────────────────────────────
+playwright-report/
+playwright/.cache/
+
+# ─── Coverage ─────────────────────────────────────────────────────────────────
+coverage/
+.nyc_output/
+
+# ─── Misc ─────────────────────────────────────────────────────────────────────
+.cache/
+.tmp/
+temp/
