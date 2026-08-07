@@ -11,6 +11,18 @@ import { HideoutParser } from "./hideoutParser";
 import { logger } from "../utils/logger";
 import { Play77Parser } from "./play77Parser";
 import { PaddleYardParser } from "./paddleYardParser";
+import { APGroundsParser } from "./APGroundsParser";
+import { PaddleHourParser } from "./PaddleHourParser";
+import { CityPickleGroundsParser } from "./CityPickleGroundsParser";
+import { BigJPaddleGroundsApokonParser } from "./BigJPaddleGroundsApokonParser";
+import { HideawayPickleballHubParser } from "./HideawayPickleballHubParser";
+import { PaddlePointParser } from "./PaddlePointParser";
+import { RallyPointParser } from "./RallyPointParser";
+import { MCentralParser } from "./MCentralParser";
+import { PMAXParser } from "./PMAXParser";
+import { PicklezoneParser } from "./PicklezoneParser";
+import { BigJPaddleGroundsMankilamParser } from "./BigJPaddleGroundsMankilamParser";
+import { TheLOBParser } from "./TheLOBParser";
 
 /**
  * Registry maps parser_name → parser instance.
@@ -22,6 +34,18 @@ const PARSER_REGISTRY: Record<string, IParser> = {
   hideout: new HideoutParser(),
   play77: new Play77Parser(),
   paddleyard: new PaddleYardParser(),
+  ap_grounds: new APGroundsParser(),
+  paddle_hour: new PaddleHourParser(),
+  city_pickle_grounds: new CityPickleGroundsParser(),
+  bigj_apokon: new BigJPaddleGroundsApokonParser(),
+  hideaway: new HideawayPickleballHubParser(),
+  paddle_point: new PaddlePointParser(),
+  rally_point: new RallyPointParser(),
+  m_central: new MCentralParser(),
+  pmax: new PMAXParser(),
+  picklezone: new PicklezoneParser(),
+  bigj_mankilam: new BigJPaddleGroundsMankilamParser(),
+  the_lob: new TheLOBParser(),
 };
 
 /**
