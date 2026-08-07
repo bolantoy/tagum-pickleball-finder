@@ -74,6 +74,9 @@ export async function checkAllAvailability(
 
     // Convert ParsedSlot → TimeSlot (add label)
     const timeSlots: TimeSlot[] = result.slots.map((slot) => ({
+      courtId: slot.courtId,
+      courtName: slot.courtName,
+
       startTime: slot.startTime,
       endTime: slot.endTime,
       label: formatSlotLabel(slot.startTime, slot.endTime),
@@ -126,8 +129,8 @@ export function groupAvailabilityByTime(
         timeMap.set(key, []);
       }
       timeMap.get(key)!.push({
-        courtId: courtAvail.courtId,
-        courtName: courtAvail.courtName,
+        courtId: slot.courtId ?? courtAvail.courtId,
+        courtName: slot.courtName ?? courtAvail.courtName,
         available: slot.available,
         price: slot.price,
       });

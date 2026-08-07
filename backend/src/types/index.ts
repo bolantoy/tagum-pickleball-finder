@@ -34,14 +34,20 @@ export interface ParseResult {
 }
 
 export interface ParsedSlot {
-  startTime: string;  // "08:00" 24h format
-  endTime: string;    // "09:00" 24h format
+  courtId?: string;
+  courtName?: string;
+
+  startTime: string;
+  endTime: string;
   available: boolean;
   price: string | null;
 }
 
 export interface TimeSlot extends ParsedSlot {
   label: string;
+
+  courtId?: string;
+  courtName?: string;
 }
 
 export interface CourtAvailability {

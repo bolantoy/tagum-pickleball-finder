@@ -9,6 +9,8 @@ import { PickleballersParser } from "./pickleballersParser";
 import { PickleCityParser } from "./pickleCityParser";
 import { HideoutParser } from "./hideoutParser";
 import { logger } from "../utils/logger";
+import { Play77Parser } from "./play77Parser";
+import { PaddleYardParser } from "./paddleYardParser";
 
 /**
  * Registry maps parser_name → parser instance.
@@ -18,6 +20,8 @@ const PARSER_REGISTRY: Record<string, IParser> = {
   pickleballers: new PickleballersParser(),
   pickle_city: new PickleCityParser(),
   hideout: new HideoutParser(),
+  play77: new Play77Parser(),
+  paddleyard: new PaddleYardParser(),
 };
 
 /**
