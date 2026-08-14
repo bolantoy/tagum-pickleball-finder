@@ -20,11 +20,3 @@ export const logger = winston.createLogger({
     new winston.transports.Console(),
   ],
 });
-
-// Add http level (used by morgan stream)
-logger.add(
-  new winston.transports.Console({
-    level: "http",
-    silent: process.env.NODE_ENV === "production",
-  })
-);

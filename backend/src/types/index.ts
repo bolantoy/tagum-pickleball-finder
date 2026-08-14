@@ -28,6 +28,14 @@ export interface ParseResult {
   courtId: string;
   courtName: string;
   date: string;
+
+  // Number of physical courts checked by the parser.
+  // Example:
+  // AP Grounds = 2
+  // Big J Apokon = 2
+  // Big J Mankilam = 8 (based on the current API response)
+  courtsChecked: number;
+
   slots: ParsedSlot[];
   sourceUrl: string | null;
   error: string | null;
@@ -54,6 +62,10 @@ export interface CourtAvailability {
   courtId: string;
   courtName: string;
   date: string;
+
+  // Number of physical courts checked at this venue.
+  courtsChecked: number;
+
   slots: TimeSlot[];
   sourceUrl: string | null;
   lastChecked: string;

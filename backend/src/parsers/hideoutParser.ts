@@ -19,6 +19,7 @@ export class HideoutParser implements IParser {
       courtId,
       courtName,
       date,
+      courtsChecked: 0,
       slots: [],
       sourceUrl: this.baseUrl,
       error: "Booking system unavailable",

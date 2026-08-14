@@ -5,7 +5,11 @@ import { logger } from "../utils/logger";
 
 interface BootstrapCourt {
   id: string;
+  court_type: string;
+  category_id: string;
+  court_notes: string | null;
   court_number: number;
+  lighting_available: boolean;
 }
 
 interface BootstrapAvailability {
@@ -15,9 +19,18 @@ interface BootstrapAvailability {
   day_of_week: string;
 }
 
+interface BootstrapCategory {
+  id: string;
+  name: string;
+  display_order: number;
+  hide_count: boolean;
+  exclude_from_availability_search: boolean;
+}
+
 interface BootstrapResponse {
   courts: BootstrapCourt[];
   availability: BootstrapAvailability[];
+  categories: BootstrapCategory[];
   profile: {
     id: string;
   };
@@ -84,9 +97,25 @@ export class PickleHubParser implements IParser {
             },
           }
         );
-  
+
         const clubId = bootstrap.data.profile.id;
-  
+
+        const categories = bootstrap.data.categories;
+
+        const searchableCategoryIds = new Set(
+          categories
+            .filter(
+              (category) => !category.exclude_from_availability_search
+            )
+            .map((category) => category.id)
+        );
+
+        const searchableCourts = bootstrap.data.courts.filter(
+          (court) => searchableCategoryIds.has(court.category_id)
+        );
+
+        const courtsChecked = searchableCourts.length;
+
         logger.info(
           `[${this.displayName}] Courts returned: ${bootstrap.data.courts.length}`
         );
@@ -109,7 +138,7 @@ export class PickleHubParser implements IParser {
             },
           }
         );
-  
+
         const booked = new Set(
           bookings.data.map(
             b => `${b.court_id}-${b.start_time}-${b.end_time}`
@@ -119,61 +148,64 @@ export class PickleHubParser implements IParser {
         const weekday = new Date(date)
           .toLocaleDateString("en-US", { weekday: "long" })
           .toLowerCase();
-  
+
         const todaysAvailability = bootstrap.data.availability.filter(
-          a => a.day_of_week === weekday
+          (a) => a.day_of_week === weekday
         );
-  
+
         const slots: ParsedSlot[] = [];
-  
+
         for (const availability of todaysAvailability) {
-  
-          let hour = parseInt(availability.start_time.substring(0, 2), 10);
-  
-          let endHour = parseInt(availability.end_time.substring(0, 2), 10);
-  
-          // midnight comes back as 00:00
-          if (endHour === 0) {
-            endHour = 24;
+          let hour = parseInt(
+            availability.start_time.substring(0, 2),
+            10
+          );
+
+          let endHour = parseInt(
+            availability.end_time.substring(0, 2),
+            10
+          );
+
+          // Handle schedules crossing midnight.
+          if (endHour <= hour) {
+            endHour += 24;
           }
-  
+
           while (hour < endHour) {
-  
-            const start = `${String(hour).padStart(2, "0")}:00`;
-            const end = `${String((hour + 1) % 24).padStart(2, "0")}:00`;
-  
-            for (const court of bootstrap.data.courts) {
-  
+            const normalizedHour = hour % 24;
+            const nextHour = (hour + 1) % 24;
+
+            const start = `${String(normalizedHour).padStart(2, "0")}:00`;
+            const end = `${String(nextHour).padStart(2, "0")}:00`;
+
+            for (const court of searchableCourts) {
               const available = !booked.has(
                 `${court.id}-${start}:00-${end}:00`
               );
-  
+
               slots.push({
                 courtId: court.id,
                 courtName: `Court ${court.court_number}`,
-  
                 startTime: start,
                 endTime: end,
-  
                 available,
-  
                 price: `₱${availability.price_per_hour}`,
               });
-  
             }
-  
+
             hour++;
-  
           }
-  
         }
   
-        logger.info(`[${this.displayName}] Generated ${slots.length} slots`);
+        if (slots.length > 0) {
+          logger.info(`[${this.displayName}] Generated ${slots.length} slots`);
+        }
   
         return {
           courtId,
           courtName,
           date,
+          courtsChecked,
           slots,
           sourceUrl,
           error: null,
@@ -189,6 +221,7 @@ export class PickleHubParser implements IParser {
           courtId,
           courtName,
           date,
+          courtsChecked: 0,
           slots: [],
           sourceUrl,
           error: message,

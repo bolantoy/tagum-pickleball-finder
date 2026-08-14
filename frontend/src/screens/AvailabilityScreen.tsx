@@ -69,10 +69,28 @@ export default function AvailabilityScreen({ route }: Props) {
     load();
   }, [load]);
 
-  const successCount = results.filter((r) => !r.error).length;
-  const availableCount = results.filter((r) =>
-    r.slots.some((s) => s.available)
-  ).length;
+  const courtsChecked = results.reduce(
+    (total, result) => total + result.courtsChecked,
+    0
+  );
+
+  const availableCourtIds = new Set<string>();
+
+  for (const result of results) {
+    if (result.error) continue;
+
+    for (const slot of result.slots) {
+      if (!slot.available) continue;
+
+      // Prefer the physical court ID supplied by the parser.
+      // Fall back to the venue ID for older parsers.
+      const physicalCourtId = slot.courtId ?? result.courtId;
+
+      availableCourtIds.add(physicalCourtId);
+    }
+  }
+
+  const availableCount = availableCourtIds.size;
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: c.background }]}>
@@ -126,7 +144,7 @@ export default function AvailabilityScreen({ route }: Props) {
         >
           <SummaryStat
             label="Courts checked"
-            value={String(successCount)}
+            value={String(courtsChecked)}
             color={c.text}
           />
           <View style={[styles.divider, { backgroundColor: c.border }]} />

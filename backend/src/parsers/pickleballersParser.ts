@@ -36,7 +36,15 @@ export class PickleballersParser implements IParser {
       const slots = this.toParsedSlots(response.data.slots);
 
       logger.info(`[${this.displayName}] Found ${slots.length} slots for ${date}`);
-      return { courtId, courtName, date, slots, sourceUrl, error: null };
+      return {
+        courtId,
+        courtName,
+        date,
+        courtsChecked: 1,
+        slots,
+        sourceUrl,
+        error: null,
+      };
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unknown parser error";
       logger.error(`[${this.displayName}] Failed: ${message}`);
@@ -44,6 +52,7 @@ export class PickleballersParser implements IParser {
         courtId,
         courtName,
         date,
+        courtsChecked: 0,
         slots: [],
         sourceUrl,
         error: `Could not reach ${this.displayName}: ${message}`,

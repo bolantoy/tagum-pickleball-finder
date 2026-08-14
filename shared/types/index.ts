@@ -21,12 +21,21 @@ export interface TimeSlot {
   label: string;     // "8:00 AM – 9:00 AM"
   available: boolean;
   price: string | null; // e.g. "₱150" or null if not provided
+
+  // Physical court represented by this slot.
+  // Example: Court 1, Court 2, etc.
+  courtId?: string;
+  courtName?: string;
 }
 
 export interface CourtAvailability {
   courtId: string;
   courtName: string;
-  date: string;       // "YYYY-MM-DD"
+  date: string;
+
+  // Number of physical courts checked by the parser.
+  courtsChecked: number;
+
   slots: TimeSlot[];
   sourceUrl: string | null;
   lastChecked: string; // ISO timestamp

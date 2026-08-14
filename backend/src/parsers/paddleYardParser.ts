@@ -84,14 +84,17 @@ export class PaddleYardParser implements IParser {
         }
       }
 
-      logger.info(
-        `[${this.displayName}] Generated ${slots.length} slots`
-      );
+      if (slots.length > 0) {
+        logger.info(
+          `[${this.displayName}] Generated ${slots.length} slots`
+        );
+      }
 
       return {
         courtId,
         courtName,
         date,
+        courtsChecked: 1,
         slots,
         sourceUrl,
         error: null,
@@ -106,6 +109,7 @@ export class PaddleYardParser implements IParser {
         courtId,
         courtName,
         date,
+        courtsChecked: 0,
         slots: [],
         sourceUrl,
         error: message,
