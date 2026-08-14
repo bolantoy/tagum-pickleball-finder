@@ -26,16 +26,30 @@ export class PickleballersParser implements IParser {
     courtId: string,
     courtName: string
   ): Promise<ParseResult> {
-    const sourceUrl = `${this.availabilityUrl.replace(/\/+$/, "")}/${encodeURIComponent(date)}`;
+    const sourceUrl =
+      `${this.availabilityUrl.replace(/\/+$/, "")}/` +
+      `${encodeURIComponent(date)}`;
 
     try {
-      logger.info(`[${this.displayName}] Checking availability for ${date}`);
-      const response = await createHttpClient().get<PickleballersAvailabilityResponse>(
-        sourceUrl
+      logger.info(
+        `[${this.displayName}] Checking availability for ${date}`
       );
-      const slots = this.toParsedSlots(response.data.slots);
 
-      logger.info(`[${this.displayName}] Found ${slots.length} slots for ${date}`);
+      const response =
+        await createHttpClient().get<PickleballersAvailabilityResponse>(
+          sourceUrl
+        );
+
+      const slots = this.toParsedSlots(
+        response.data.slots,
+        courtId,
+        courtName
+      );
+
+      logger.info(
+        `[${this.displayName}] Found ${slots.length} slots for ${date}`
+      );
+
       return {
         courtId,
         courtName,
@@ -46,8 +60,11 @@ export class PickleballersParser implements IParser {
         error: null,
       };
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Unknown parser error";
+      const message =
+        err instanceof Error ? err.message : "Unknown parser error";
+
       logger.error(`[${this.displayName}] Failed: ${message}`);
+
       return {
         courtId,
         courtName,
@@ -60,8 +77,14 @@ export class PickleballersParser implements IParser {
     }
   }
 
-  private toParsedSlots(apiSlots: PickleballersApiSlot[]): ParsedSlot[] {
-    if (!Array.isArray(apiSlots)) return [];
+  private toParsedSlots(
+    apiSlots: PickleballersApiSlot[],
+    courtId: string,
+    courtName: string
+  ): ParsedSlot[] {
+    if (!Array.isArray(apiSlots)) {
+      return [];
+    }
 
     return apiSlots.flatMap((slot) => {
       if (
@@ -74,12 +97,20 @@ export class PickleballersParser implements IParser {
         return [];
       }
 
-      return [{
-        startTime: `${String(slot.hour).padStart(2, "0")}:00`,
-        endTime: `${String((slot.hour + 1) % 24).padStart(2, "0")}:00`,
-        available: slot.status.toLowerCase() === "available",
-        price: `₱${slot.rate}`,
-      }];
+      const available =
+        slot.status.toLowerCase() === "available";
+
+      return [
+        {
+          courtId,
+          court: courtName,
+          startTime: `${String(slot.hour).padStart(2, "0")}:00`,
+          endTime: `${String((slot.hour + 1) % 24).padStart(2, "0")}:00`,
+          available,
+          status: available ? "available" : "booked",
+          price: `₱${slot.rate}`,
+        },
+      ];
     });
   }
 }

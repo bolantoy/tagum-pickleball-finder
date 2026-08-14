@@ -75,10 +75,11 @@ export class PaddleYardParser implements IParser {
 
           slots.push({
             courtId: String(court),
-            courtName: `Outdoor Court ${court}`,
+            court: `Outdoor Court ${court}`,
             startTime,
             endTime,
             available: !isBooked,
+            status: isBooked ? "booked" : "available",
             price: startTime < "16:00" ? "₱200" : "₱250",
           });
         }

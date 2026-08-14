@@ -29,6 +29,50 @@ import DatePickerStrip from "../components/DatePickerStrip";
 type Props = NativeStackScreenProps<RootStackParamList, "Availability">;
 type NavProp = NativeStackNavigationProp<RootStackParamList>;
 
+function getLocalDateString(): string {
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function filterExpiredSlots(
+  results: CourtAvailability[],
+  selectedDate: string
+): CourtAvailability[] {
+  const today = getLocalDateString();
+
+  // Future dates: keep everything.
+  if (selectedDate !== today) {
+    return results;
+  }
+
+  const now = new Date();
+  const currentMinutes =
+    now.getHours() * 60 + now.getMinutes();
+
+  return results.map((result) => ({
+    ...result,
+    slots: result.slots.filter((slot) => {
+      const [hourString, minuteString] = slot.startTime.split(":");
+
+      const hour = Number(hourString);
+      const minute = Number(minuteString);
+
+      if (!Number.isFinite(hour) || !Number.isFinite(minute)) {
+        return true;
+      }
+
+      const slotMinutes = hour * 60 + minute;
+
+      return slotMinutes > currentMinutes;
+    }),
+  }));
+}
+
 export default function AvailabilityScreen({ route }: Props) {
   const { date: initialDate, courtId } = route.params;
   const { theme } = useTheme();
@@ -48,11 +92,15 @@ export default function AvailabilityScreen({ route }: Props) {
 
     try {
       const data = await fetchAvailability(selectedDate);
-      let filtered = data.results;
+
+      let filtered = filterExpiredSlots(
+        data.results,
+        selectedDate
+      );
 
       // If opened from a specific court, show only that court
       if (courtId) {
-        filtered = data.results.filter((r) => r.courtId === courtId);
+        filtered = filtered.filter((r) => r.courtId === courtId);
       }
 
       setResults(filtered);

@@ -1,5 +1,5 @@
 // ─── Availability Card ─────────────────────────────────────────────────────────
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -24,8 +24,10 @@ export default function AvailabilityCard({
   style,
 }: AvailabilityCardProps) {
   const { theme } = useTheme();
+  const [expanded, setExpanded] = useState(false);
 
   const availableSlots = availability.slots.filter((s) => s.available);
+  const groupedSlots = groupSlotsByTime(availability.slots);
   const hasError = !!availability.error;
 
   return (
@@ -100,20 +102,32 @@ export default function AvailabilityCard({
         <>
           {/* Slots */}
           <View style={styles.slotsGrid}>
-            {availability.slots.slice(0, 8).map((slot, i) => (
-              <SlotChip key={i} slot={slot} />
-            ))}
-            {availability.slots.length > 8 && (
-              <View
+            {(expanded ? groupedSlots : groupedSlots.slice(0, 8)).map(
+              (slot) => (
+                <SlotChip key={slot.time} slot={slot} />
+              )
+            )}
+
+            {groupedSlots.length > 8 && (
+              <TouchableOpacity
                 style={[
                   styles.moreChip,
                   { backgroundColor: theme.colors.surfaceHigh },
                 ]}
+                onPress={() => setExpanded((prev) => !prev)}
+                activeOpacity={0.7}
               >
-                <Text style={{ color: theme.colors.textMuted, fontSize: 11 }}>
-                  +{availability.slots.length - 8} more
+                <Text
+                  style={{
+                    color: theme.colors.textMuted,
+                    fontSize: 11,
+                  }}
+                >
+                  {expanded
+                    ? "Show less"
+                    : `+${groupedSlots.length - 8} more`}
                 </Text>
-              </View>
+              </TouchableOpacity>
             )}
           </View>
 
@@ -148,17 +162,72 @@ export default function AvailabilityCard({
   );
 }
 
-function SlotChip({ slot }: { slot: TimeSlot }) {
+interface GroupedTimeSlot {
+  time: string;
+  available: boolean;
+  availableCount: number;
+  totalCount: number;
+}
+
+function groupSlotsByTime(slots: TimeSlot[]): GroupedTimeSlot[] {
+  const grouped = new Map<
+    string,
+    {
+      availableCourts: Set<string>;
+      totalCourts: Set<string>;
+    }
+  >();
+
+  for (const slot of slots) {
+    const time = slot.label.split(" – ")[0];
+
+    if (!grouped.has(time)) {
+      grouped.set(time, {
+        availableCourts: new Set<string>(),
+        totalCourts: new Set<string>(),
+      });
+    }
+
+    const group = grouped.get(time)!;
+
+    // Count each physical court only once for this time.
+    // Use courtId because that is the actual unique court identifier.
+    const courtId = slot.courtId;
+
+    if (!courtId) {
+      continue;
+    }
+
+    group.totalCourts.add(courtId);
+
+    if (slot.available) {
+      group.availableCourts.add(courtId);
+    }
+  }
+
+  return Array.from(grouped.entries()).map(([time, group]) => ({
+    time,
+    available: group.availableCourts.size > 0,
+    availableCount: group.availableCourts.size,
+    totalCount: group.totalCourts.size,
+  }));
+}
+
+function SlotChip({ slot }: { slot: GroupedTimeSlot }) {
   const { theme } = useTheme();
+
   const bg = slot.available
     ? `${Colors.available}15`
     : `${Colors.unavailable}10`;
-  const color = slot.available ? Colors.available : Colors.unavailable;
+
+  const color = slot.available
+    ? Colors.available
+    : Colors.unavailable;
 
   return (
     <View style={[styles.chip, { backgroundColor: bg }]}>
       <Text style={[styles.chipText, { color }]} numberOfLines={1}>
-        {slot.label.split(" – ")[0]}
+        {slot.time} - {slot.availableCount} of {slot.totalCount} courts
       </Text>
     </View>
   );
@@ -216,11 +285,11 @@ const styles = StyleSheet.create({
   },
   chip: {
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingVertical: 7,
     borderRadius: 8,
   },
   chipText: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: "600",
   },
   moreChip: {

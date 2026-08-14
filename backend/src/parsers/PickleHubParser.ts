@@ -184,10 +184,11 @@ export class PickleHubParser implements IParser {
 
               slots.push({
                 courtId: court.id,
-                courtName: `Court ${court.court_number}`,
+                court: `Court ${court.court_number}`,
                 startTime: start,
                 endTime: end,
                 available,
+                status: available ? "available" : "booked",
                 price: `₱${availability.price_per_hour}`,
               });
             }

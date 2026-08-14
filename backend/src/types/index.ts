@@ -42,19 +42,17 @@ export interface ParseResult {
 }
 
 export interface ParsedSlot {
-  courtId?: string;
-  courtName?: string;
-
+  courtId: string;
+  court: string;
   startTime: string;
   endTime: string;
   available: boolean;
+  status: "available" | "booked" | "openplay" | "awaiting";
   price: string | null;
 }
 
 export interface TimeSlot extends ParsedSlot {
   label: string;
-
-  courtId?: string;
   courtName?: string;
 }
 
