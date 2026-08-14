@@ -102,17 +102,16 @@ export class PickleHubParser implements IParser {
 
         const categories = bootstrap.data.categories;
 
-        const searchableCategoryIds = new Set(
-          categories
-            .filter(
-              (category) => !category.exclude_from_availability_search
-            )
-            .map((category) => category.id)
-        );
-
-        const searchableCourts = bootstrap.data.courts.filter(
-          (court) => searchableCategoryIds.has(court.category_id)
-        );
+        const searchableCourts =
+          categories.length > 0
+            ? bootstrap.data.courts.filter((court) =>
+                categories.some(
+                  (category) =>
+                    category.id === court.category_id &&
+                    !category.exclude_from_availability_search
+                )
+              )
+            : bootstrap.data.courts;
 
         const courtsChecked = searchableCourts.length;
 
