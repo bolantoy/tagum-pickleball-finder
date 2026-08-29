@@ -61,7 +61,7 @@ export class PickleHubParser implements IParser {
     "https://odimuhhyzyzdymujymzy.supabase.co/rest/v1";
 
   protected readonly apiKey =
-    "REDACTED-PICKLEHUB-KEY";
+    process.env.PICKLEHUB_API_KEY ?? "";
 
   constructor(config: PickleHubConfig) {
     this.parserName = config.parserName;

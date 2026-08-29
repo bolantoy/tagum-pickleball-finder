@@ -16,7 +16,7 @@ export class PaddleYardParser implements IParser {
     "https://jxrdmsexmusccjmsrgre.supabase.co/rest/v1/rpc/get_booked_slots";
 
   private readonly apiKey =
-    "REDACTED-PADDLEYARD-KEY";
+    process.env.PADDLEYARD_API_KEY ?? "";
 
   private readonly OPEN_SLOTS = [
     "6 AM - 7 AM",
