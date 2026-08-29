@@ -26,7 +26,29 @@ Availability data is **never cached** — every search fetches fresh data direct
 
 ## Screenshots
 
-> Add screenshots here once the app is running.
+### Home
+
+The home screen provides a quick overview of courts in Tagum City, with search, availability filtering, favorites, and direct booking access.
+
+![Tagum Pickleball Finder Home](docs/screenshots/home.png)
+
+### Live Availability
+
+Check court availability by date across multiple venues, with available and booked time slots grouped by court.
+
+![Tagum Pickleball Finder Availability](docs/screenshots/availability.png)
+
+### Favorites
+
+Save frequently used courts for quick access to their availability and booking information.
+
+![Tagum Pickleball Finder Favorites](docs/screenshots/favorites.png)
+
+### Court Details
+
+View court information, contact details, website and booking links, directions, and availability.
+
+![Tagum Pickleball Finder Court Details](docs/screenshots/court-details.png)
 
 ---
 
