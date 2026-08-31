@@ -1,7 +1,7 @@
 // ─── Date Picker Strip ─────────────────────────────────────────────────────────
-// Horizontal scrollable strip showing the next 14 days.
+// Horizontal scrollable strip showing the next 60 days.
 
-import React, { useRef } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -23,7 +23,7 @@ export default function DatePickerStrip({
   onDateSelect,
 }: DatePickerStripProps) {
   const { theme } = useTheme();
-  const dates = getDateRange(14);
+  const dates = getDateRange(60);
 
   return (
     <ScrollView

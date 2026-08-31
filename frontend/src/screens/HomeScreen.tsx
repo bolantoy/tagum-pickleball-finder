@@ -45,6 +45,9 @@ export default function HomeScreen() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<CourtFilter>("all");
 
+  const [availabilityDate, setAvailabilityDate] = useState(todayString());
+  const [availabilityLoading, setAvailabilityLoading] = useState(false);
+
   // Stores venue IDs that currently have at least one available slot.
   const [availableCourtIds, setAvailableCourtIds] = useState<Set<string>>(
     new Set()
@@ -56,13 +59,13 @@ export default function HomeScreen() {
     try {
       setError(null);
 
-      // Load courts and today's availability together.
-      const [courtData, availabilityData] = await Promise.all([
-        fetchCourts(),
-        fetchAvailability(today),
-      ]);
-
+      const courtData = await fetchCourts();
       setCourts(courtData);
+
+      const dateToCheck =
+        filter === "available" ? availabilityDate : today;
+
+      const availabilityData = await fetchAvailability(dateToCheck);
 
       const availableIds = new Set<string>();
 
@@ -88,8 +91,9 @@ export default function HomeScreen() {
     } finally {
       setLoading(false);
       setRefreshing(false);
+      setAvailabilityLoading(false);
     }
-  }, [today]);
+  }, [today, filter, availabilityDate]);
 
   useEffect(() => {
     loadCourts();
@@ -105,7 +109,7 @@ export default function HomeScreen() {
   const filteredCourts = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
-    return courts.filter((court) => {
+    const filtered = courts.filter((court) => {
       // Search filter
       const matchesSearch =
         query.length === 0 ||
@@ -114,17 +118,29 @@ export default function HomeScreen() {
 
       if (!matchesSearch) return false;
 
-      // Category filter
+      // Available filter
       if (filter === "available") {
         return availableCourtIds.has(court.id);
       }
 
+      // Favorites filter
       if (filter === "favorites") {
         return favorites.some((favorite) => favorite.id === court.id);
       }
 
       return true;
     });
+
+    // Put favorite courts first.
+    const favoriteCourts = filtered.filter((court) =>
+      favorites.some((favorite) => favorite.id === court.id)
+    );
+
+    const otherCourts = filtered.filter(
+      (court) => !favorites.some((favorite) => favorite.id === court.id)
+    );
+
+    return [...favoriteCourts, ...otherCourts];
   }, [courts, searchQuery, filter, availableCourtIds, favorites]);
 
   const openBookingWebsite = useCallback(async (court: Court) => {
@@ -248,6 +264,13 @@ export default function HomeScreen() {
           />
         </ScrollView>
 
+        {filter === "available" && (
+          <AvailabilityDatePicker
+            selectedDate={availabilityDate}
+            onDateSelect={setAvailabilityDate}
+          />
+        )}
+
         {/* Check Availability CTA */}
         <TouchableOpacity
           style={[
@@ -255,14 +278,16 @@ export default function HomeScreen() {
             { backgroundColor: Colors.brand.primary },
           ]}
           onPress={() =>
-            navigation.navigate("Availability", { date: today })
+            navigation.navigate("Availability", { date: availabilityDate })
           }
           activeOpacity={0.85}
         >
           <Ionicons name="calendar" size={20} color="#fff" />
 
           <Text style={styles.ctaText}>
-            Check Today's Availability
+            {availabilityDate === today
+              ? "Check Today's Availability"
+              : `Check ${formatShortDate(availabilityDate)} Availability`}
           </Text>
 
           <Ionicons
@@ -273,8 +298,14 @@ export default function HomeScreen() {
         </TouchableOpacity>
 
         {/* Loading */}
-        {loading && (
-          <LoadingSpinner message="Loading courts..." />
+        {(loading || availabilityLoading) && (
+          <LoadingSpinner
+            message={
+              availabilityLoading
+                ? "Checking availability..."
+                : "Loading courts..."
+            }
+          />
         )}
 
         {/* Error */}
@@ -362,8 +393,12 @@ export default function HomeScreen() {
                         ]}
                       >
                         {availableCourtIds.has(court.id)
-                          ? "Available today"
-                          : "No availability today"}
+                          ? availabilityDate === today
+                            ? "Available today"
+                            : `Available ${formatShortDate(availabilityDate)}`
+                          : availabilityDate === today
+                          ? "No availability today"
+                          : `No availability ${formatShortDate(availabilityDate)}`}
                       </Text>
                     </View>
 
@@ -512,6 +547,89 @@ function FilterButton({
   );
 }
 
+function AvailabilityDatePicker({
+  selectedDate,
+  onDateSelect,
+}: {
+  selectedDate: string;
+  onDateSelect: (date: string) => void;
+}) {
+  const { theme } = useTheme();
+  const c = theme.colors;
+
+  const dates = getNextDates(60);
+
+  return (
+    <View style={styles.datePickerContainer}>
+      <Text style={[styles.datePickerLabel, { color: c.textSecondary }]}>
+        Available on
+      </Text>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.datePickerRow}
+      >
+        {dates.map((date) => {
+          const selected = date === selectedDate;
+
+          return (
+            <TouchableOpacity
+              key={date}
+              style={[
+                styles.dateButton,
+                {
+                  backgroundColor: selected
+                    ? Colors.brand.primary
+                    : c.surface,
+                  borderColor: selected
+                    ? Colors.brand.primary
+                    : c.border,
+                },
+              ]}
+              onPress={() => onDateSelect(date)}
+              activeOpacity={0.8}
+            >
+              <Text
+                style={[
+                  styles.dateDay,
+                  {
+                    color: selected ? "#fff" : c.textSecondary,
+                  },
+                ]}
+              >
+                {getDateDay(date)}
+              </Text>
+
+              <Text
+                style={[
+                  styles.dateNumber,
+                  {
+                    color: selected ? "#fff" : c.text,
+                  },
+                ]}
+              >
+                {getDateNumber(date)}
+              </Text>
+
+              <Text
+                style={[
+                  styles.dateMonth,
+                  {
+                    color: selected ? "#fff" : c.textMuted,
+                  },
+                ]}
+              >
+                {getDateMonth(date)}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+    </View>
+  );
+}
+
 function Section({
   title,
   icon,
@@ -554,6 +672,57 @@ function getGreeting(): string {
   if (hour < 17) return "afternoon";
 
   return "evening";
+}
+
+function getNextDates(count: number): string[] {
+  const dates: string[] = [];
+  const base = new Date();
+
+  for (let i = 0; i < count; i++) {
+    const date = new Date(base);
+    date.setDate(base.getDate() + i);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    dates.push(`${year}-${month}-${day}`);
+  }
+
+  return dates;
+}
+
+function getDateDay(dateString: string): string {
+  const date = new Date(`${dateString}T00:00:00`);
+
+  return date.toLocaleDateString("en-PH", {
+    weekday: "short",
+  });
+}
+
+function getDateNumber(dateString: string): string {
+  const date = new Date(`${dateString}T00:00:00`);
+
+  return date.toLocaleDateString("en-PH", {
+    day: "numeric",
+  });
+}
+
+function getDateMonth(dateString: string): string {
+  const date = new Date(`${dateString}T00:00:00`);
+
+  return date.toLocaleDateString("en-PH", {
+    month: "short",
+  });
+}
+
+function formatShortDate(dateString: string): string {
+  const date = new Date(`${dateString}T00:00:00`);
+
+  return date.toLocaleDateString("en-PH", {
+    month: "short",
+    day: "numeric",
+  });
 }
 
 const styles = StyleSheet.create({
@@ -728,5 +897,46 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 5,
     lineHeight: 19,
+  },
+
+  datePickerContainer: {
+    marginBottom: 16,
+  },
+
+  datePickerLabel: {
+    fontSize: 12,
+    fontWeight: "700",
+    paddingHorizontal: 20,
+    marginBottom: 8,
+  },
+
+  datePickerRow: {
+    paddingHorizontal: 20,
+    gap: 8,
+  },
+
+  dateButton: {
+    width: 64,
+    paddingVertical: 8,
+    borderRadius: 12,
+    borderWidth: 1,
+    alignItems: "center",
+  },
+
+  dateDay: {
+    fontSize: 10,
+    fontWeight: "700",
+    textTransform: "uppercase",
+  },
+
+  dateNumber: {
+    fontSize: 20,
+    fontWeight: "800",
+    marginTop: 1,
+  },
+
+  dateMonth: {
+    fontSize: 10,
+    marginTop: 1,
   },
 });
