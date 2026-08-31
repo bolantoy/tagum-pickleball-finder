@@ -12,10 +12,10 @@ import { RootStackParamList, TabParamList } from "./types";
 // Screens
 import SplashScreen from "../screens/SplashScreen";
 import HomeScreen from "../screens/HomeScreen";
-import SearchScreen from "../screens/SearchScreen";
+import PlannerScreen from "../screens/PlannerScreen";
 import CourtDetailsScreen from "../screens/CourtDetailsScreen";
 import AvailabilityScreen from "../screens/AvailabilityScreen";
-import FavoritesScreen from "../screens/FavoritesScreen";
+import ScheduleScreen from "../screens/ScheduleScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -50,8 +50,8 @@ function MainTabs() {
             { default: keyof typeof Ionicons.glyphMap; focused: keyof typeof Ionicons.glyphMap }
           > = {
             Home: { default: "home-outline", focused: "home" },
-            Search: { default: "search-outline", focused: "search" },
-            Favorites: { default: "heart-outline", focused: "heart" },
+            Planner: { default: "calendar-outline", focused: "calendar" },
+            Schedule: { default: "calendar-outline", focused: "calendar" },
             Settings: { default: "settings-outline", focused: "settings" },
           };
           const icons = iconMap[route.name] ?? {
@@ -69,8 +69,8 @@ function MainTabs() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarLabel: "Home" }} />
-      <Tab.Screen name="Search" component={SearchScreen} options={{ tabBarLabel: "Search" }} />
-      <Tab.Screen name="Favorites" component={FavoritesScreen} options={{ tabBarLabel: "Favorites" }} />
+      <Tab.Screen name="Planner" component={PlannerScreen} options={{ tabBarLabel: "Planner" }} />
+      <Tab.Screen name="Schedule" component={ScheduleScreen} options={{ tabBarLabel: "Schedule" }} />
       <Tab.Screen name="Settings" component={SettingsScreen} options={{ tabBarLabel: "Settings" }} />
     </Tab.Navigator>
   );

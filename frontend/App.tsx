@@ -7,6 +7,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { ThemeProvider } from "./src/context/ThemeContext";
 import { FavoritesProvider } from "./src/context/FavoritesContext";
+import { ScheduleProvider } from "./src/context/ScheduleContext";
 import AppNavigator from "./src/navigation/AppNavigator";
 
 // Keep the splash screen visible while loading fonts / async work
@@ -38,11 +39,16 @@ export default function App() {
   if (!appReady) return null;
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
+    <GestureHandlerRootView
+      style={{ flex: 1 }}
+      onLayout={onLayoutRootView}
+    >
       <SafeAreaProvider>
         <ThemeProvider>
           <FavoritesProvider>
-            <AppNavigator />
+            <ScheduleProvider>
+              <AppNavigator />
+            </ScheduleProvider>
           </FavoritesProvider>
         </ThemeProvider>
       </SafeAreaProvider>

@@ -21,6 +21,7 @@ export const Config = {
 
   STORAGE_KEYS: {
     FAVORITES: "@tagum_pb:favorites",
+    SCHEDULE: "tagum_pb:schedule",
     THEME: "@tagum_pb:theme",
     RECENT_SEARCHES: "@tagum_pb:recent_searches",
   },

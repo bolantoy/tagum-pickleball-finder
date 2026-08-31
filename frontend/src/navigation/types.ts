@@ -14,8 +14,8 @@ export type RootStackParamList = {
 // ── Bottom Tab ─────────────────────────────────────────────────────────────────
 export type TabParamList = {
   Home: undefined;
-  Search: { date?: string } | undefined;
-  Favorites: undefined;
+  Planner: undefined;
+  Schedule: undefined;
   Settings: undefined;
 };
 
