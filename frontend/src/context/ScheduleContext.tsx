@@ -11,6 +11,8 @@ import React, {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Config } from "../constants/config";
 
+export type ScheduleStatus = "planned" | "booked";
+
 export interface ScheduleItem {
   id: string;
 
@@ -29,7 +31,7 @@ export interface ScheduleItem {
   bookingUrl: string | null;
 
   // Local state
-  status: "planned" | "booked";
+  status: ScheduleStatus;
   createdAt: string;
 }
 
@@ -44,7 +46,7 @@ interface ScheduleContextValue {
 
   updateScheduleStatus: (
     id: string,
-    status: ScheduleItem["status"]
+    status: ScheduleStatus
   ) => void;
 
   isScheduled: (

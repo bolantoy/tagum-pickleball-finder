@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   StatusBar,
   Alert,
+  Linking,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -21,7 +22,7 @@ import { formatDateDisplay } from "../utils/dateUtils";
 
 export default function ScheduleScreen() {
   const { theme } = useTheme();
-  const { schedules, removeSchedule } = useSchedule();
+  const { schedules, removeSchedule, updateScheduleStatus, } = useSchedule();
   const c = theme.colors;
 
   const today = new Date();
@@ -34,16 +35,6 @@ export default function ScheduleScreen() {
         return date >= today;
       })
       .sort(compareSchedules);
-  }, [schedules]);
-
-  const past = useMemo(() => {
-    return schedules
-      .filter((item) => {
-        const date = new Date(`${item.date}T00:00:00`);
-        return date < today;
-      })
-      .sort(compareSchedules)
-      .reverse();
   }, [schedules]);
 
   const confirmDelete = (item: ScheduleItem) => {
@@ -61,6 +52,56 @@ export default function ScheduleScreen() {
           text: "Remove",
           style: "destructive",
           onPress: () => removeSchedule(item.id),
+        },
+      ]
+    );
+  };
+
+  const openBookingWebsite = async (item: ScheduleItem) => {
+    if (!item.bookingUrl) {
+      Alert.alert(
+        "Booking unavailable",
+        "This court does not have a booking website available."
+      );
+      return;
+    }
+
+    try {
+      const supported = await Linking.canOpenURL(item.bookingUrl);
+
+      if (!supported) {
+        Alert.alert(
+          "Unable to open booking website",
+          "The booking website could not be opened."
+        );
+        return;
+      }
+
+      await Linking.openURL(item.bookingUrl);
+    } catch (error) {
+      console.warn("Could not open booking website:", error);
+
+      Alert.alert(
+        "Unable to open booking website",
+        "Something went wrong while opening the booking website."
+      );
+    }
+  };
+
+  const markAsBooked = (item: ScheduleItem) => {
+    Alert.alert(
+      "Mark as Booked?",
+      `${item.venueName}\n${item.courtName}\n${formatDateDisplay(
+        item.date
+      )} · ${formatTimeRange(item)}`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Mark as Booked",
+          onPress: () => updateScheduleStatus(item.id, "booked"),
         },
       ]
     );
@@ -118,28 +159,12 @@ export default function ScheduleScreen() {
                 key={item.id}
                 item={item}
                 onDelete={() => confirmDelete(item)}
+                onBookCourt={() => openBookingWebsite(item)}
+                onMarkAsBooked={() => markAsBooked(item)}
               />
             ))}
 
             {/* Past */}
-            {past.length > 0 && (
-              <>
-                <SectionHeader
-                  title="Past Sessions"
-                  icon="time-outline"
-                  color={c.text}
-                />
-
-                {past.map((item) => (
-                  <ScheduleCard
-                    key={item.id}
-                    item={item}
-                    past
-                    onDelete={() => confirmDelete(item)}
-                  />
-                ))}
-              </>
-            )}
           </>
         )}
 
@@ -153,12 +178,14 @@ export default function ScheduleScreen() {
 
 function ScheduleCard({
   item,
-  past = false,
   onDelete,
+  onBookCourt,
+  onMarkAsBooked,
 }: {
   item: ScheduleItem;
-  past?: boolean;
   onDelete: () => void;
+  onBookCourt: () => void;
+  onMarkAsBooked: () => void;
 }) {
   const { theme } = useTheme();
   const c = theme.colors;
@@ -170,7 +197,6 @@ function ScheduleCard({
         {
           backgroundColor: c.surface,
           borderColor: c.border,
-          opacity: past ? 0.75 : 1,
         },
       ]}
     >
@@ -180,16 +206,14 @@ function ScheduleCard({
           style={[
             styles.dateIcon,
             {
-              backgroundColor: past
-                ? c.surfaceHigh
-                : Colors.brand.primary,
+              backgroundColor: Colors.brand.primary,
             },
           ]}
         >
           <Ionicons
             name="calendar"
             size={18}
-            color={past ? c.textMuted : "#fff"}
+            color="#fff"
           />
         </View>
 
@@ -295,6 +319,62 @@ function ScheduleCard({
             {item.status === "booked" ? "Booked" : "Planned"}
           </Text>
         </View>
+      </View>
+
+      <View style={styles.actions}>
+        {item.bookingUrl && (
+          <TouchableOpacity
+            style={[
+              styles.actionButton,
+              styles.bookingButton,
+              {
+                backgroundColor: Colors.brand.primary,
+              },
+            ]}
+            onPress={onBookCourt}
+            activeOpacity={0.85}
+          >
+            <Ionicons
+              name="open-outline"
+              size={17}
+              color="#fff"
+            />
+
+            <Text style={styles.bookingButtonText}>
+              Book Court
+            </Text>
+          </TouchableOpacity>
+        )}
+
+        {item.status === "planned" && (
+          <TouchableOpacity
+            style={[
+              styles.actionButton,
+              styles.markBookedButton,
+              {
+                borderColor: c.border,
+                backgroundColor: c.surface,
+              },
+            ]}
+            onPress={onMarkAsBooked}
+            activeOpacity={0.8}
+          >
+            <Ionicons
+              name="checkmark-circle-outline"
+              size={17}
+              color={Colors.available}
+            />
+
+            <Text
+              style={[
+                styles.markBookedText,
+                { color: Colors.available },
+              ]}
+            >
+              Mark as Booked
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -577,5 +657,41 @@ const styles = StyleSheet.create({
 
   bottomSpace: {
     height: 32,
+  },
+
+  actions: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 12,
+  },
+
+  actionButton: {
+    flex: 1,
+    minHeight: 44,
+    borderRadius: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 7,
+    paddingHorizontal: 10,
+  },
+
+  bookingButton: {
+    borderWidth: 1,
+  },
+
+  bookingButtonText: {
+    color: "#fff",
+    fontSize: 13,
+    fontWeight: "800",
+  },
+
+  markBookedButton: {
+    borderWidth: 1,
+  },
+
+  markBookedText: {
+    fontSize: 13,
+    fontWeight: "800",
   },
 });
