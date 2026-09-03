@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 import { useTheme } from "../context/ThemeContext";
 import { useSchedule } from "../context/ScheduleContext";
@@ -353,6 +354,7 @@ function SelectedTimeCourts({
 }
 
 export default function PlannerScreen() {
+  const tabBarHeight = useBottomTabBarHeight();
   const { theme } = useTheme();
   const { addSchedule, isScheduled } = useSchedule();
   const c = theme.colors;
@@ -664,7 +666,10 @@ export default function PlannerScreen() {
       <ScrollView
         ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[
+          styles.content,
+          { paddingBottom: tabBarHeight + 24 },
+        ]}
         onScroll={(event) => {
             scrollY.current = event.nativeEvent.contentOffset.y;
         }}
@@ -766,9 +771,17 @@ export default function PlannerScreen() {
 
             {!loading && (
               <TouchableOpacity
+                style={[
+                  styles.refreshButton,
+                  {
+                    backgroundColor: c.surfaceHigh,
+                    borderColor: c.border,
+                  },
+                ]}
                 onPress={loadAvailability}
                 disabled={loading}
-                hitSlop={8}
+                activeOpacity={0.75}
+                hitSlop={6}
               >
                 <Ionicons
                   name="refresh"
@@ -851,7 +864,7 @@ export default function PlannerScreen() {
                                 styles.timeIcon,
                                 {
                                 backgroundColor: selected
-                                    ? "rgba(255,255,255,0.18)"
+                                    ? "rgba(255,255,255,0.20)"
                                     : c.surfaceHigh,
                                 },
                             ]}
@@ -930,8 +943,6 @@ export default function PlannerScreen() {
                 })}
                 </View>
             )}
-
-          <View style={styles.bottomSpace} />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -944,7 +955,7 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    paddingBottom: 32,
+    paddingBottom: 120,
   },
 
   header: {
@@ -952,8 +963,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 24,
+    paddingTop: 18,
+    paddingBottom: 28,
   },
 
   headerText: {
@@ -961,40 +972,42 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: "800",
-    letterSpacing: -0.6,
+    letterSpacing: -0.8,
   },
 
   subtitle: {
-    fontSize: 15,
-    marginTop: 4,
+    fontSize: 16,
+    lineHeight: 22,
+    marginTop: 5,
   },
 
   headerIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     alignItems: "center",
     justifyContent: "center",
-    marginLeft: 12,
+    marginLeft: 16,
   },
 
   section: {
-    marginBottom: 24,
+    marginBottom: 30,
   },
 
   sectionHeader: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    marginBottom: 12,
+    marginBottom: 14,
   },
 
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "800",
+    letterSpacing: -0.3,
   },
 
   sectionHint: {
@@ -1003,10 +1016,10 @@ const styles = StyleSheet.create({
   },
 
   selectedDate: {
-    fontSize: 14,
+    fontSize: 15,
     paddingHorizontal: 20,
     marginTop: -6,
-    marginBottom: 12,
+    marginBottom: 14,
   },
 
   datePicker: {
@@ -1019,10 +1032,11 @@ const styles = StyleSheet.create({
   },
 
   timeCard: {
-    minHeight: 76,
-    borderRadius: 16,
+    minHeight: 82,
+    borderRadius: 18,
     borderWidth: 1,
-    paddingHorizontal: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -1031,27 +1045,28 @@ const styles = StyleSheet.create({
   timeLeft: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 12,
+    gap: 14,
     flex: 1,
   },
 
   timeIcon: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: 46,
+    height: 46,
+    borderRadius: 23,
     alignItems: "center",
     justifyContent: "center",
   },
 
   timeLabel: {
-    fontSize: 16,
-    fontWeight: "700",
+    fontSize: 17,
+    fontWeight: "800",
+    letterSpacing: -0.2,
   },
 
   timeAvailability: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: "600",
-    marginTop: 3,
+    marginTop: 4,
   },
 
   selectionCard: {
@@ -1065,9 +1080,9 @@ const styles = StyleSheet.create({
   },
 
   selectionIcon: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
     backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
@@ -1086,19 +1101,20 @@ selectedTimeHeader: {
   backgroundColor: "transparent",
   flexDirection: "row",
   alignItems: "center",
-  gap: 12,
-  marginBottom: 20,
+  gap: 13,
+  marginBottom: 22,
 },
 
 courtSectionTitle: {
-  fontSize: 18,
+  fontSize: 20,
   fontWeight: "800",
+  letterSpacing: -0.3,
 },
 
 courtSectionHint: {
-  fontSize: 13,
-  marginTop: 3,
-  marginBottom: 12,
+  fontSize: 14,
+  marginTop: 4,
+  marginBottom: 14,
 },
 
 courtList: {
@@ -1106,11 +1122,11 @@ courtList: {
 },
 
 courtCard: {
-  minHeight: 70,
-  borderRadius: 14,
+  minHeight: 76,
+  borderRadius: 16,
   borderWidth: 1,
-  paddingHorizontal: 14,
-  paddingVertical: 12,
+  paddingHorizontal: 16,
+  paddingVertical: 13,
   flexDirection: "row",
   alignItems: "center",
   justifyContent: "space-between",
@@ -1119,39 +1135,43 @@ courtCard: {
 courtCardLeft: {
   flexDirection: "row",
   alignItems: "center",
-  gap: 12,
+  gap: 13,
   flex: 1,
+  minWidth: 0,
 },
 
 courtDot: {
-  width: 10,
-  height: 10,
-  borderRadius: 5,
+  width: 11,
+  height: 11,
+  borderRadius: 5.5,
 },
 
 courtInfo: {
   flex: 1,
+  minWidth: 0,
 },
 
 courtVenue: {
-  fontSize: 15,
-  fontWeight: "700",
+  fontSize: 16,
+  fontWeight: "800",
 },
 
 courtNumber: {
-  fontSize: 12,
-  marginTop: 2,
+  fontSize: 13,
+  marginTop: 3,
 },
 
 courtCardRight: {
   flexDirection: "row",
   alignItems: "center",
+  justifyContent: "flex-end",
   gap: 10,
   marginLeft: 10,
+  minWidth: 92,
 },
 
 courtPrice: {
-  fontSize: 15,
+  fontSize: 16,
   fontWeight: "800",
 },
 
@@ -1161,51 +1181,58 @@ selectedCourtActions: {
 },
 
 saveScheduleButton: {
-  minHeight: 50,
-  borderRadius: 14,
+  minHeight: 54,
+  borderRadius: 16,
   borderWidth: 1,
   flexDirection: "row",
   alignItems: "center",
   justifyContent: "center",
-  gap: 8,
+  gap: 9,
 },
 
 saveScheduleText: {
-  fontSize: 15,
-  fontWeight: "800",
-},
-
-bookButton: {
-  minHeight: 54,
-  borderRadius: 14,
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: 8,
-},
-
-bookButtonText: {
-  color: "#fff",
   fontSize: 16,
   fontWeight: "800",
 },
 
+bookButton: {
+  minHeight: 58,
+  borderRadius: 16,
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 9,
+},
+
+bookButtonText: {
+  color: "#fff",
+  fontSize: 17,
+  fontWeight: "800",
+},
+
   selectionTitle: {
-    fontSize: 12,
-    fontWeight: "600",
+    fontSize: 13,
+    fontWeight: "700",
   },
 
   selectionTime: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "800",
-    marginTop: 2,
-  },
-
-  bottomSpace: {
-    height: 24,
+    marginTop: 3,
+    letterSpacing: -0.2,
   },
 
   sectionHorizontalPadding: {
     paddingHorizontal: 20,
+  },
+
+  refreshButton: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 0,
   },
 });
