@@ -37,6 +37,16 @@ export default function ScheduleScreen() {
       .sort(compareSchedules);
   }, [schedules]);
 
+  const past = useMemo(() => {
+    return schedules
+      .filter((item) => {
+        const date = new Date(`${item.date}T00:00:00`);
+        return date < today;
+      })
+      .sort(compareSchedules)
+      .reverse();
+  }, [schedules]);
+
   const confirmDelete = (item: ScheduleItem) => {
     Alert.alert(
       "Remove from Schedule?",
@@ -127,7 +137,7 @@ export default function ScheduleScreen() {
               My Schedule
             </Text>
             <Text style={[styles.subtitle, { color: c.textSecondary }]}>
-              Your saved court sessions
+              Your upcoming court sessions
             </Text>
           </View>
 
@@ -165,6 +175,26 @@ export default function ScheduleScreen() {
             ))}
 
             {/* Past */}
+            {past.length > 0 && (
+              <>
+                <SectionHeader
+                  title="Past"
+                  icon="time-outline"
+                  color={c.textSecondary}
+                />
+
+                {past.map((item) => (
+                  <ScheduleCard
+                    key={item.id}
+                    item={item}
+                    onDelete={() => confirmDelete(item)}
+                    onBookCourt={() => openBookingWebsite(item)}
+                    onMarkAsBooked={() => markAsBooked(item)}
+                    isPast
+                  />
+                ))}
+              </>
+            )}
           </>
         )}
 
@@ -181,11 +211,13 @@ function ScheduleCard({
   onDelete,
   onBookCourt,
   onMarkAsBooked,
+  isPast = false,
 }: {
   item: ScheduleItem;
   onDelete: () => void;
   onBookCourt: () => void;
   onMarkAsBooked: () => void;
+  isPast?: boolean;
 }) {
   const { theme } = useTheme();
   const c = theme.colors;
@@ -194,6 +226,7 @@ function ScheduleCard({
     <View
       style={[
         styles.card,
+        isPast && styles.pastCard,
         {
           backgroundColor: c.surface,
           borderColor: c.border,
@@ -322,7 +355,7 @@ function ScheduleCard({
       </View>
 
       <View style={styles.actions}>
-        {item.bookingUrl && (
+        {!isPast && item.bookingUrl && (
           <TouchableOpacity
             style={[
               styles.actionButton,
@@ -346,7 +379,7 @@ function ScheduleCard({
           </TouchableOpacity>
         )}
 
-        {item.status === "planned" && (
+        {!isPast && item.status === "planned" && (
           <TouchableOpacity
             style={[
               styles.actionButton,
@@ -516,7 +549,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 7,
     marginBottom: 12,
-    marginTop: 4,
+    marginTop: 24,
   },
 
   sectionTitle: {
@@ -693,5 +726,9 @@ const styles = StyleSheet.create({
   markBookedText: {
     fontSize: 13,
     fontWeight: "800",
+  },
+
+  pastCard: {
+    opacity: 0.72,
   },
 });
