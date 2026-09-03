@@ -16,6 +16,8 @@ export const Colors = {
     background: "#0F172A",   // Slate-900 — main background
     surface: "#1E293B",      // Slate-800 — cards, modals
     surfaceHigh: "#334155",  // Slate-700 — elevated elements
+    surfaceSubtle: "#172235",
+    surfacePressed: "#26354B",
     border: "#475569",       // Slate-600 — borders
     text: "#F8FAFC",         // Slate-50 — primary text
     textSecondary: "#94A3B8",// Slate-400 — muted text
@@ -28,6 +30,8 @@ export const Colors = {
     background: "#F8FAFC",   // Slate-50
     surface: "#FFFFFF",
     surfaceHigh: "#F1F5F9",  // Slate-100
+    surfaceSubtle: "#F8FAFC",
+    surfacePressed: "#E2E8F0",
     border: "#E2E8F0",       // Slate-200
     text: "#0F172A",         // Slate-900
     textSecondary: "#475569",// Slate-600
@@ -40,6 +44,9 @@ export const Colors = {
   unavailable: "#EF4444",
   warning: "#F59E0B",
   info: "#3B82F6",
+
+  planned: "#F59E0B",
+  booked: "#22C55E",
 
   // ── Utility ────────────────────────────────────────────────────────────────
   transparent: "transparent",

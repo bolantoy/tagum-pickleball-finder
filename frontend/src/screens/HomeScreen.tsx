@@ -209,7 +209,7 @@ export default function HomeScreen() {
             },
           ]}
         >
-          <Ionicons name="search" size={18} color={c.textMuted} />
+          <Ionicons name="search" size={20} color={c.textMuted} />
 
           <TextInput
             value={searchQuery}
@@ -282,7 +282,7 @@ export default function HomeScreen() {
           }
           activeOpacity={0.85}
         >
-          <Ionicons name="calendar" size={20} color="#fff" />
+          <Ionicons name="calendar" size={21} color="#fff" />
 
           <Text style={styles.ctaText}>
             {availabilityDate === today
@@ -348,7 +348,7 @@ export default function HomeScreen() {
                 {filteredCourts.map((court) => (
                   <View
                     key={court.id}
-                    style={{ width: 220 }}
+                    style={{ width: 300 }}
                   >
                     <CourtCard
                       court={court}
@@ -735,32 +735,35 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 20,
+    paddingTop: 18,
+    paddingBottom: 18,
   },
 
   greeting: {
     fontSize: 13,
-    fontWeight: "500",
+    fontWeight: "600",
+    letterSpacing: 0.1,
   },
 
   title: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: "800",
-    letterSpacing: -0.5,
-    marginTop: 2,
+    letterSpacing: -0.7,
+    marginTop: 3,
   },
 
   avatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 2,
+    borderColor: "rgba(255,255,255,0.12)",
   },
 
   avatarEmoji: {
-    fontSize: 24,
+    fontSize: 26,
   },
 
   searchBar: {
@@ -768,57 +771,61 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
     marginHorizontal: 20,
-    marginBottom: 12,
+    marginBottom: 14,
     paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderRadius: 14,
+    height: 54,
+    borderRadius: 16,
     borderWidth: 1,
   },
 
   searchInput: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 15,
     padding: 0,
   },
 
   filterRow: {
     paddingHorizontal: 20,
     gap: 8,
-    paddingBottom: 14,
+    paddingBottom: 16,
   },
 
   filterButton: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 6,
-    paddingHorizontal: 14,
-    paddingVertical: 9,
-    borderRadius: 20,
+    justifyContent: "center",
+    gap: 7,
+    minHeight: 42,
+    paddingHorizontal: 16,
+    borderRadius: 21,
     borderWidth: 1,
   },
 
   filterButtonText: {
     fontSize: 13,
     fontWeight: "700",
+    letterSpacing: 0.1,
   },
 
   ctaButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 8,
+    gap: 10,
     marginHorizontal: 20,
-    marginBottom: 24,
-    paddingVertical: 16,
+    marginBottom: 28,
+    height: 56,
+    paddingHorizontal: 18,
     borderRadius: 16,
   },
 
   ctaText: {
     color: "#fff",
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "800",
     flex: 1,
     textAlign: "center",
+    letterSpacing: 0.1,
   },
 
   section: {

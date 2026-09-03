@@ -107,7 +107,7 @@ export default function CourtCard({
           >
             <Ionicons
               name="tennisball-outline"
-              size={32}
+              size={36}
               color={theme.colors.textMuted}
             />
           </View>
@@ -162,13 +162,13 @@ export default function CourtCard({
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 16,
+    borderRadius: 18,
     borderWidth: 1,
     overflow: "hidden",
     marginHorizontal: 4,
   },
   imageContainer: {
-    height: 140,
+    height: 156,
     position: "relative",
   },
   image: {
@@ -184,22 +184,25 @@ const styles = StyleSheet.create({
   },
   favButton: {
     position: "absolute",
-    top: 10,
-    right: 10,
-    backgroundColor: "rgba(0,0,0,0.35)",
-    borderRadius: 20,
-    width: 36,
-    height: 36,
+    top: 12,
+    right: 12,
+    backgroundColor: "rgba(0,0,0,0.42)",
+    borderRadius: 21,
+    width: 42,
+    height: 42,
     alignItems: "center",
     justifyContent: "center",
   },
   content: {
-    padding: 14,
-    gap: 4,
+    paddingHorizontal: 16,
+    paddingTop: 15,
+    paddingBottom: 16,
+    gap: 6,
   },
   name: {
-    fontSize: 15,
-    fontWeight: "700",
+    fontSize: 17,
+    fontWeight: "800",
+    letterSpacing: -0.2,
   },
   row: {
     flexDirection: "row",
@@ -208,10 +211,12 @@ const styles = StyleSheet.create({
   },
   address: {
     fontSize: 13,
+    lineHeight: 18,
     flex: 1,
   },
   meta: {
     fontSize: 12,
+    lineHeight: 17,
   },
   // Compact variant
   compact: {
