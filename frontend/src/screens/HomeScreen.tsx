@@ -348,7 +348,7 @@ export default function HomeScreen() {
                 {filteredCourts.map((court) => (
                   <View
                     key={court.id}
-                    style={{ width: 300 }}
+                    style={{ width: 220 }}
                   >
                     <CourtCard
                       court={court}
