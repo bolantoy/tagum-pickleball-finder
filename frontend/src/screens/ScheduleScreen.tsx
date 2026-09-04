@@ -119,6 +119,7 @@ export default function ScheduleScreen() {
 
   return (
     <SafeAreaView
+      edges={["top", "left", "right"]}
       style={[styles.container, { backgroundColor: c.background }]}
     >
       <StatusBar
@@ -355,7 +356,7 @@ function ScheduleCard({
       </View>
 
       <View style={styles.actions}>
-        {!isPast && item.bookingUrl && (
+        {!isPast && item.status !== "booked" && item.bookingUrl && (
           <TouchableOpacity
             style={[
               styles.actionButton,
