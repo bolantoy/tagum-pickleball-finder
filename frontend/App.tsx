@@ -10,6 +10,11 @@ import { FavoritesProvider } from "./src/context/FavoritesContext";
 import { ScheduleProvider } from "./src/context/ScheduleContext";
 import AppNavigator from "./src/navigation/AppNavigator";
 
+SplashScreen.setOptions({
+  duration: 600,
+  fade: true,
+});
+
 // Keep the splash screen visible while loading fonts / async work
 SplashScreen.preventAutoHideAsync();
 
@@ -20,13 +25,13 @@ export default function App() {
     async function prepare() {
       try {
         // Add any async initialization here (fonts, etc.)
-        await new Promise((r) => setTimeout(r, 500)); // brief delay for splash visibility
       } catch (e) {
         console.warn("App initialization error:", e);
       } finally {
         setAppReady(true);
       }
     }
+    
     prepare();
   }, []);
 

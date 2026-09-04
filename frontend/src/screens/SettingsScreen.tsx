@@ -24,7 +24,10 @@ export default function SettingsScreen() {
   const isDarkEnabled = themeMode === "dark" || (themeMode === "system" && theme.isDark);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: c.background }]}>
+    <SafeAreaView
+      edges={["top", "left", "right"]}
+      style={[styles.container, { backgroundColor: c.background }]}
+    >
       <StatusBar
         barStyle={theme.isDark ? "light-content" : "dark-content"}
         backgroundColor={c.background}

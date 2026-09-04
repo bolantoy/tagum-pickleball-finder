@@ -125,27 +125,6 @@ function SelectedTimeCourts({
 
   return (
     <View style={styles.selectedSection}>
-      <View style={styles.selectedTimeHeader}>
-        <View style={styles.selectionIcon}>
-          <Ionicons name="checkmark" size={20} color="#fff" />
-        </View>
-
-        <View style={styles.selectionInfo}>
-          <Text style={[styles.selectionTitle, { color: c.text }]}>
-            Selected time
-          </Text>
-
-          <Text
-            style={[
-              styles.selectionTime,
-              { color: Colors.brand.primary },
-            ]}
-          >
-            {time.label}
-          </Text>
-        </View>
-      </View>
-
       <Text style={[styles.courtSectionTitle, { color: c.text }]}>
         Choose a court
       </Text>
@@ -649,10 +628,8 @@ export default function PlannerScreen() {
 
   return (
     <SafeAreaView
-      style={[
-        styles.container,
-        { backgroundColor: c.background },
-      ]}
+      edges={["top", "left", "right"]}
+      style={[styles.container, { backgroundColor: c.background }]}
     >
       <StatusBar
         barStyle={
@@ -1032,11 +1009,10 @@ const styles = StyleSheet.create({
   },
 
   timeCard: {
-    minHeight: 82,
-    borderRadius: 18,
+    minHeight: 60,
+    borderRadius: 13,
     borderWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: 12,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -1045,28 +1021,27 @@ const styles = StyleSheet.create({
   timeLeft: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 14,
+    gap: 9,
     flex: 1,
   },
 
   timeIcon: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
+    width: 33,
+    height: 33,
+    borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
   },
 
   timeLabel: {
-    fontSize: 17,
-    fontWeight: "800",
-    letterSpacing: -0.2,
+    fontSize: 16,
+    fontWeight: "700",
   },
 
   timeAvailability: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: "600",
-    marginTop: 4,
+    marginTop: 3,
   },
 
   selectionCard: {
@@ -1122,11 +1097,11 @@ courtList: {
 },
 
 courtCard: {
-  minHeight: 76,
-  borderRadius: 16,
+  minHeight: 58,
+  borderRadius: 12,
   borderWidth: 1,
-  paddingHorizontal: 16,
-  paddingVertical: 13,
+  paddingHorizontal: 10,
+  paddingVertical: 8,
   flexDirection: "row",
   alignItems: "center",
   justifyContent: "space-between",
@@ -1135,15 +1110,14 @@ courtCard: {
 courtCardLeft: {
   flexDirection: "row",
   alignItems: "center",
-  gap: 13,
+  gap: 8,
   flex: 1,
-  minWidth: 0,
 },
 
 courtDot: {
-  width: 11,
-  height: 11,
-  borderRadius: 5.5,
+  width: 10,
+  height: 10,
+  borderRadius: 5,
 },
 
 courtInfo: {
@@ -1152,13 +1126,13 @@ courtInfo: {
 },
 
 courtVenue: {
-  fontSize: 16,
-  fontWeight: "800",
+  fontSize: 13,
+  fontWeight: "700",
 },
 
 courtNumber: {
-  fontSize: 13,
-  marginTop: 3,
+  fontSize: 10,
+  marginTop: 1,
 },
 
 courtCardRight: {
@@ -1171,42 +1145,45 @@ courtCardRight: {
 },
 
 courtPrice: {
-  fontSize: 16,
+  fontSize: 13,
   fontWeight: "800",
 },
 
 selectedCourtActions: {
-  marginTop: 14,
-  gap: 10,
+  marginTop: 10,
+  gap: 8,
+  alignItems: "flex-end",
 },
 
 saveScheduleButton: {
-  minHeight: 54,
-  borderRadius: 16,
+  width: "72%",
+  minHeight: 40,
+  borderRadius: 12,
   borderWidth: 1,
   flexDirection: "row",
   alignItems: "center",
   justifyContent: "center",
-  gap: 9,
+  gap: 6,
 },
 
 saveScheduleText: {
-  fontSize: 16,
+  fontSize: 12,
   fontWeight: "800",
 },
 
 bookButton: {
-  minHeight: 58,
-  borderRadius: 16,
+  width: "72%",
+  minHeight: 44,
+  borderRadius: 12,
   flexDirection: "row",
   alignItems: "center",
   justifyContent: "center",
-  gap: 9,
+  gap: 8,
 },
 
 bookButtonText: {
   color: "#fff",
-  fontSize: 17,
+  fontSize: 15,
   fontWeight: "800",
 },
 
