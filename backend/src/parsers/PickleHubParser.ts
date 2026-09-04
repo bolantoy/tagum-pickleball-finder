@@ -138,11 +138,7 @@ export class PickleHubParser implements IParser {
           }
         );
 
-        const booked = new Set(
-          bookings.data.map(
-            b => `${b.court_id}-${b.start_time}-${b.end_time}`
-          )
-        );
+        const booked = bookings.data;
         
         const weekday = new Date(date)
           .toLocaleDateString("en-US", { weekday: "long" })
@@ -178,9 +174,19 @@ export class PickleHubParser implements IParser {
             const end = `${String(nextHour).padStart(2, "0")}:00`;
 
             for (const court of searchableCourts) {
-              const available = !booked.has(
-                `${court.id}-${start}:00-${end}:00`
-              );
+              const slotStart = `${start}:00`;
+              const slotEnd = `${end}:00`;
+
+              const available = !booked.some((booking) => {
+                if (booking.court_id !== court.id) {
+                  return false;
+                }
+
+                return (
+                  booking.start_time < slotEnd &&
+                  booking.end_time > slotStart
+                );
+              });
 
               slots.push({
                 courtId: court.id,
