@@ -47,6 +47,7 @@ interface PickleHubConfig {
   displayName: string;
   slug: string;
   namePattern: string;
+  courtNumbers?: number[];
 }
 
 export class PickleHubParser implements IParser {
@@ -56,6 +57,7 @@ export class PickleHubParser implements IParser {
 
   protected readonly slug: string;
   protected readonly namePattern: string;
+  protected readonly courtNumbers?: number[];
 
   protected readonly supabaseUrl =
     "https://odimuhhyzyzdymujymzy.supabase.co/rest/v1";
@@ -68,6 +70,7 @@ export class PickleHubParser implements IParser {
     this.displayName = config.displayName;
     this.slug = config.slug;
     this.namePattern = config.namePattern;
+    this.courtNumbers = config.courtNumbers;
   }
 
   async checkAvailability(
@@ -102,7 +105,7 @@ export class PickleHubParser implements IParser {
 
         const categories = bootstrap.data.categories;
 
-        const searchableCourts =
+        const categoryFilteredCourts =
           categories.length > 0
             ? bootstrap.data.courts.filter((court) =>
                 categories.some(
@@ -112,6 +115,12 @@ export class PickleHubParser implements IParser {
                 )
               )
             : bootstrap.data.courts;
+
+        const searchableCourts = this.courtNumbers
+          ? categoryFilteredCourts.filter((court) =>
+              this.courtNumbers!.includes(court.court_number)
+            )
+          : categoryFilteredCourts;
 
         const courtsChecked = searchableCourts.length;
 
