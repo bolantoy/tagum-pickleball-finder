@@ -7,6 +7,7 @@ export class NineTwoNinePickleyardParser extends PickleHubParser {
       displayName: "929 PICKLEYARD",
       slug: "929-pickleyard",
       namePattern: "929%pickleyard",
+      courtNumbers: [1, 2],
     });
   }
 }
