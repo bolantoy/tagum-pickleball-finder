@@ -25,6 +25,7 @@ import { BigJPaddleGroundsMankilamParser } from "./BigJPaddleGroundsMankilamPars
 import { TheLOBParser } from "./TheLOBParser";
 import { SamsPickleballCourtParser } from "./SamsPickleballCourtParser";
 import { PickleHouseParser } from "./PickleHouseParser";
+import { NineTwoNinePickleyardParser } from "./929PickleyardParser";
 
 /**
  * Registry maps parser_name → parser instance.
@@ -50,6 +51,7 @@ const PARSER_REGISTRY: Record<string, IParser> = {
   the_lob: new TheLOBParser(),
   sams: new SamsPickleballCourtParser(),
   pickle_house: new PickleHouseParser(),
+  nine_two_nine_pickleyard: new NineTwoNinePickleyardParser(),
 };
 
 /**
