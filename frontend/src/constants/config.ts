@@ -1,7 +1,7 @@
 export const Config = {
   API_BASE_URL:
     process.env.EXPO_PUBLIC_API_BASE_URL ??
-    "https://tagum-pickleball-finder-production.up.railway.app/api/v1",
+    "https://tagum-pickleball-finder.onrender.com/api/v1",
 
   GOOGLE_MAPS_API_KEY:
     process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
