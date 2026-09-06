@@ -30,6 +30,7 @@ import { WilliamsPickleHubParser } from "./WilliamsPickleHubParser";
 import { DinkAvenueParser } from "./DinkAvenueParser";
 import { HappyPaddleParser } from "./HappyPaddleParser";
 import { GroundZeroParser } from "./GroundZeroParser";
+import { PikolSaPaayoParser } from "./PikolSaPaayoParser";
 
 /**
  * Registry maps parser_name → parser instance.
@@ -60,6 +61,7 @@ const PARSER_REGISTRY: Record<string, IParser> = {
   dink_avenue: new DinkAvenueParser(),
   happy_paddle: new HappyPaddleParser(),
   ground_zero: new GroundZeroParser(),
+  pikol_sa_paayo: new PikolSaPaayoParser(),
 };
 
 /**
