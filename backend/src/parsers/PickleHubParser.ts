@@ -48,6 +48,7 @@ interface PickleHubConfig {
   slug: string;
   namePattern: string;
   courtNumbers?: number[];
+  courtMapping?: Record<string, number>;
 }
 
 export class PickleHubParser implements IParser {
@@ -58,6 +59,7 @@ export class PickleHubParser implements IParser {
   protected readonly slug: string;
   protected readonly namePattern: string;
   protected readonly courtNumbers?: number[];
+  protected readonly courtMapping?: Record<string, number>;
 
   protected readonly supabaseUrl =
     "https://odimuhhyzyzdymujymzy.supabase.co/rest/v1";
@@ -71,6 +73,7 @@ export class PickleHubParser implements IParser {
     this.slug = config.slug;
     this.namePattern = config.namePattern;
     this.courtNumbers = config.courtNumbers;
+    this.courtMapping = config.courtMapping;
   }
 
   async checkAvailability(
@@ -116,11 +119,25 @@ export class PickleHubParser implements IParser {
               )
             : bootstrap.data.courts;
 
-        const searchableCourts = this.courtNumbers
-          ? categoryFilteredCourts.filter((court) =>
-              this.courtNumbers!.includes(court.court_number)
-            )
-          : categoryFilteredCourts;
+        const mappedCourtNumber = this.courtMapping?.[courtId];
+
+        const searchableCourts = categoryFilteredCourts.filter((court) => {
+          if (
+            mappedCourtNumber !== undefined &&
+            court.court_number !== mappedCourtNumber
+          ) {
+            return false;
+          }
+
+          if (
+            this.courtNumbers &&
+            !this.courtNumbers.includes(court.court_number)
+          ) {
+            return false;
+          }
+
+          return true;
+        });
 
         const courtsChecked = searchableCourts.length;
 
