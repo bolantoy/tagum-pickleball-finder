@@ -25,6 +25,7 @@ export function createPaddleSessionsRouter(service?: PaddleQService): Router {
   router.post("/:sessionId/organizer-capability/revoke", route("revokeCapability"));
 
   router.post("/:sessionId/players", route("addPlayer"));
+  router.post("/:sessionId/players/manage", route("addManagedPlayer"));
   router.post("/:sessionId/players/:playerId/rejoin", route("rejoinPlayer"));
   router.post("/:sessionId/players/:playerId/pause", route("pausePlayer"));
   router.post("/:sessionId/players/:playerId/remove", route("removePlayer"));

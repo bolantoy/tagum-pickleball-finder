@@ -7,6 +7,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -73,15 +74,25 @@ export default function PaddleQSessionLobbyScreen({ navigation, route }: Props) 
   const [loadError, setLoadError] = useState<{ title: string; message: string } | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [organizerAccess, setOrganizerAccess] = useState(false);
+  const [addPlayerOpen, setAddPlayerOpen] = useState(false);
+  const [newPlayerName, setNewPlayerName] = useState("");
+  const [addingPlayer, setAddingPlayer] = useState(false);
+  const [addPlayerError, setAddPlayerError] = useState("");
+  const [addPlayerNotice, setAddPlayerNotice] = useState("");
   const [playerId, setPlayerId] = useState<string | null>(null);
   const [venueName, setVenueName] = useState("");
   const requestInFlight = useRef(false);
+  const refreshAgain = useRef(false);
+  const addPlayerInFlight = useRef(false);
   const mounted = useRef(true);
   const venueNameCache = useRef(new Map<string, string>());
   const c = theme.colors;
 
-  const refreshLobby = useCallback(async (pull = false) => {
-    if (requestInFlight.current) return;
+  const refreshLobby = useCallback(async (pull = false, refreshAfterCurrent = false) => {
+    if (requestInFlight.current) {
+      if (refreshAfterCurrent) refreshAgain.current = true;
+      return;
+    }
     requestInFlight.current = true;
     if (pull) setRefreshing(true);
     try {
@@ -100,11 +111,14 @@ export default function PaddleQSessionLobbyScreen({ navigation, route }: Props) 
       setLoadError({ title: normalized.title, message: normalized.message });
       if (normalized.notFound) setNotFound(true);
     } finally {
+      const shouldRefreshAgain = refreshAgain.current;
+      refreshAgain.current = false;
       requestInFlight.current = false;
       if (mounted.current) {
         setInitialLoading(false);
         setRefreshing(false);
       }
+      if (shouldRefreshAgain && mounted.current) void refreshLobby();
     }
   }, [sessionId]);
 
@@ -191,6 +205,52 @@ export default function PaddleQSessionLobbyScreen({ navigation, route }: Props) 
 
   const pullRefresh = useCallback(() => { void refreshLobby(true); }, [refreshLobby]);
 
+  const addManagedPlayer = useCallback(async () => {
+    if (addPlayerInFlight.current) return;
+    const displayName = newPlayerName.trim();
+    if (!displayName || displayName.length > 100) {
+      setAddPlayerError("Enter a player name between 1 and 100 characters.");
+      return;
+    }
+    addPlayerInFlight.current = true;
+    setAddingPlayer(true);
+    setAddPlayerError("");
+    setAddPlayerNotice("");
+    try {
+      const capability = await storage.getOrganizerCapability(sessionId);
+      if (!capability) {
+        setOrganizerAccess(false);
+        setAddPlayerOpen(false);
+        setAddPlayerNotice("Organizer access is unavailable on this device.");
+        return;
+      }
+      const result = await paddleQApi.addManagedPlayer(sessionId, capability, displayName);
+      setAddPlayerNotice(`${result.player.displayName} was added to the shared queue.`);
+      setNewPlayerName("");
+      setAddPlayerOpen(false);
+      await refreshLobby(false, true);
+    } catch (error) {
+      if (error instanceof PaddleQApiError && (error.status === 401 || error.status === 403)) {
+        setOrganizerAccess(false);
+        setAddPlayerOpen(false);
+        setAddPlayerNotice("Organizer access is no longer valid. This lobby is now read-only on this device.");
+      } else if (error instanceof PaddleQApiError && error.code === "CONFLICT") {
+        setAddPlayerError("A player with this name is already active in the session.");
+      } else if (error instanceof PaddleQApiError && (error.status === 409 || error.code === "INVALID_STATE")) {
+        setAddPlayerError("This session no longer accepts player changes. Refresh the lobby and try again if it is still active.");
+      } else if (error instanceof PaddleQApiError && (error.status === 400 || error.code === "VALIDATION_ERROR")) {
+        setAddPlayerError("Check the player name and try again.");
+      } else if (error instanceof PaddleQApiError && (error.status === 0 || error.code === "NETWORK_ERROR")) {
+        setAddPlayerError("Could not reach Paddle Q. Check your connection and try again.");
+      } else {
+        setAddPlayerError("The player could not be added right now. Try again shortly.");
+      }
+    } finally {
+      addPlayerInFlight.current = false;
+      setAddingPlayer(false);
+    }
+  }, [newPlayerName, refreshLobby, sessionId, storage]);
+
   return (
     <SafeAreaView edges={["top", "left", "right"]} style={[styles.container, { backgroundColor: c.background }]}>
       <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} backgroundColor={c.background} />
@@ -211,6 +271,7 @@ export default function PaddleQSessionLobbyScreen({ navigation, route }: Props) 
       ) : (
         <ScrollView
           contentContainerStyle={styles.content}
+          keyboardShouldPersistTaps="handled"
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={pullRefresh} tintColor={Colors.brand.primary} colors={[Colors.brand.primary]} />}
           showsVerticalScrollIndicator={false}
         >
@@ -244,14 +305,25 @@ export default function PaddleQSessionLobbyScreen({ navigation, route }: Props) 
               </TouchableOpacity>
             ) : null}
             {organizerAccess && (snapshot.session.status === "scheduled" || snapshot.session.status === "active") ? (
-              <TouchableOpacity
-                style={[styles.organizerButton, { borderColor: c.border }]}
-                onPress={() => navigation.navigate("OrganizerControls", { sessionId })}
-                accessibilityRole="button"
-              >
-                <Ionicons name="settings-outline" size={17} color={Colors.brand.primary} />
-                <Text style={[styles.secondaryNavText, { color: c.text }]}>Organizer Controls</Text>
-              </TouchableOpacity>
+              <>
+                <TouchableOpacity
+                  style={[styles.organizerButton, { borderColor: c.border }]}
+                  onPress={() => navigation.navigate("OrganizerControls", { sessionId })}
+                  accessibilityRole="button"
+                >
+                  <Ionicons name="settings-outline" size={17} color={Colors.brand.primary} />
+                  <Text style={[styles.secondaryNavText, { color: c.text }]}>Organizer Controls</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.organizerButton, { borderColor: c.border }]}
+                  onPress={() => { setAddPlayerError(""); setAddPlayerNotice(""); setAddPlayerOpen((open) => !open); }}
+                  accessibilityRole="button"
+                  accessibilityState={{ expanded: addPlayerOpen }}
+                >
+                  <Ionicons name="person-add-outline" size={17} color={Colors.brand.primary} />
+                  <Text style={[styles.secondaryNavText, { color: c.text }]}>{addPlayerOpen ? "Close Add Player" : "Add Player"}</Text>
+                </TouchableOpacity>
+              </>
             ) : null}
             <View style={styles.secondaryNavigation}>
               <TouchableOpacity style={[styles.secondaryNavButton, { borderColor: c.border }]} onPress={() => navigation.navigate("GameHistory", { sessionId })} accessibilityRole="button">
@@ -266,6 +338,44 @@ export default function PaddleQSessionLobbyScreen({ navigation, route }: Props) 
           </View>
 
           <SectionTitle title="Shared Queue" subtitle={isTerminal(snapshot.session.status) ? "Final waiting order from this session." : "One waiting line is shared across all session courts."} />
+          {addPlayerNotice ? <Text style={[styles.addPlayerNotice, { color: Colors.brand.primaryDark }]} accessibilityRole="text">{addPlayerNotice}</Text> : null}
+          {addPlayerOpen && organizerAccess && (snapshot.session.status === "scheduled" || snapshot.session.status === "active") ? (
+            <View style={[styles.addPlayerCard, { backgroundColor: c.surface, borderColor: c.border }]}>
+              <Text style={[styles.addPlayerLabel, { color: c.text }]}>Player display name</Text>
+              <TextInput
+                value={newPlayerName}
+                onChangeText={(value) => { setNewPlayerName(value); setAddPlayerError(""); }}
+                placeholder="Enter a name"
+                placeholderTextColor={c.textMuted}
+                editable={!addingPlayer}
+                autoCapitalize="words"
+                maxLength={100}
+                returnKeyType="done"
+                onSubmitEditing={() => void addManagedPlayer()}
+                style={[styles.addPlayerInput, { color: c.text, backgroundColor: c.background, borderColor: c.border }]}
+                accessibilityLabel="Player display name"
+              />
+              {addPlayerError ? <Text style={styles.addPlayerError} accessibilityRole="alert">{addPlayerError}</Text> : null}
+              <View style={styles.addPlayerActions}>
+                <TouchableOpacity
+                  style={[styles.addPlayerCancel, { borderColor: c.border }]}
+                  onPress={() => { setAddPlayerOpen(false); setAddPlayerError(""); }}
+                  disabled={addingPlayer}
+                  accessibilityRole="button"
+                >
+                  <Text style={[styles.addPlayerCancelText, { color: c.text }]}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.addPlayerSubmit, addingPlayer && styles.disabled]}
+                  onPress={() => void addManagedPlayer()}
+                  disabled={addingPlayer}
+                  accessibilityRole="button"
+                >
+                  {addingPlayer ? <LoadingSpinner size="small" /> : <Text style={styles.addPlayerSubmitText}>Add</Text>}
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : null}
           {snapshot.queue.length === 0 ? (
             <EmptyState icon="people-outline" title="Nobody is waiting" subtitle="Players who join will appear here in queue order." style={styles.emptyState} />
           ) : (
@@ -402,6 +512,17 @@ const styles = StyleSheet.create({
   rotationButton: { minHeight: 48, borderRadius: Radius.md, backgroundColor: Colors.brand.primary, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: Spacing.sm, paddingHorizontal: Spacing.md, marginTop: Spacing.md },
   rotationButtonText: { flex: 1, color: "#FFFFFF", fontSize: Typography.bodySmall, fontWeight: FontWeight.bold },
   organizerButton: { minHeight: 44, borderWidth: 1, borderRadius: Radius.md, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: Spacing.xs, paddingHorizontal: Spacing.sm, marginTop: Spacing.sm },
+  addPlayerCard: { borderWidth: 1, borderRadius: Radius.md, padding: Spacing.md, gap: Spacing.sm, marginBottom: Spacing.md },
+  addPlayerLabel: { fontSize: Typography.bodySmall, fontWeight: FontWeight.semibold },
+  addPlayerInput: { minHeight: 48, borderWidth: 1, borderRadius: Radius.sm, paddingHorizontal: Spacing.md, fontSize: Typography.body },
+  addPlayerError: { color: Colors.unavailable, fontSize: Typography.caption },
+  addPlayerNotice: { fontSize: Typography.bodySmall, marginBottom: Spacing.md },
+  addPlayerActions: { flexDirection: "row", justifyContent: "flex-end", gap: Spacing.sm, marginTop: Spacing.xs },
+  addPlayerCancel: { minHeight: 44, borderWidth: 1, borderRadius: Radius.sm, alignItems: "center", justifyContent: "center", paddingHorizontal: Spacing.lg },
+  addPlayerCancelText: { fontSize: Typography.bodySmall, fontWeight: FontWeight.semibold },
+  addPlayerSubmit: { minHeight: 44, minWidth: 88, borderRadius: Radius.sm, alignItems: "center", justifyContent: "center", paddingHorizontal: Spacing.lg, backgroundColor: Colors.brand.primary },
+  addPlayerSubmitText: { color: "#FFFFFF", fontSize: Typography.bodySmall, fontWeight: FontWeight.bold },
+  disabled: { opacity: 0.55 },
   secondaryNavigation: { flexDirection: "row", gap: Spacing.sm, marginTop: Spacing.sm },
   secondaryNavButton: { flex: 1, minHeight: 44, borderWidth: 1, borderRadius: Radius.md, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: Spacing.xs, paddingHorizontal: Spacing.sm },
   secondaryNavText: { fontSize: Typography.caption, fontWeight: FontWeight.semibold },

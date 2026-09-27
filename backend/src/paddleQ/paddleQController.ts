@@ -5,7 +5,7 @@ import { PaddleQService, PaddleQServiceError } from "./paddleQService";
 
 type ApiService = Pick<PaddleQService,
   | "createSession" | "getSession" | "updateSession" | "rotateOrganizerCapability" | "revokeOrganizerCapability"
-  | "joinPlayer" | "rejoinPlayer" | "pausePlayer" | "removePlayer" | "movePlayer" | "skipPlayer" | "getQueue"
+  | "addPlayer" | "joinPlayer" | "rejoinPlayer" | "pausePlayer" | "removePlayer" | "movePlayer" | "skipPlayer" | "getQueue"
   | "getCurrentGames" | "getGameHistory" | "recommendNextRound" | "startGames" | "startRecommendedRound"
   | "completeGame" | "cancelGame" | "getStatistics"
 >;
@@ -120,6 +120,13 @@ export function createPaddleQController(service: ApiService) {
       const { sessionId } = validateIds(req);
       const body = parse(z.object({ displayName: playerName }).strict(), req.body);
       return service.joinPlayer(sessionId, body.displayName);
+    }, 201),
+    addManagedPlayer: withApiErrors(async (req) => {
+      const { sessionId } = validateIds(req);
+      const secret = organizer(req);
+      const body = parse(z.object({ displayName: playerName }).strict(), req.body);
+      const result = await service.addPlayer(sessionId, secret, body.displayName);
+      return { player: result.player };
     }, 201),
     rejoinPlayer: withApiErrors(async (req) => {
       const { sessionId, playerId } = parse(playerParams, req.params);

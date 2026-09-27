@@ -31,6 +31,34 @@ import { todayString } from "../utils/dateUtils";
 type Props = NativeStackScreenProps<PaddleQStackParamList, "CreateSession">;
 type PendingCreate = CreatePaddleSessionResponse;
 
+interface FieldProps {
+  label: string;
+  value: string;
+  onChangeText: (value: string) => void;
+  placeholder: string;
+  keyboardType?: "default" | "number-pad";
+  disabled: boolean;
+  colors: { text: string; textMuted: string; surface: string; border: string };
+}
+
+function Field({ label, value, onChangeText, placeholder, keyboardType, disabled, colors }: FieldProps) {
+  return (
+    <View style={styles.field}>
+      <Text style={[styles.label, { color: colors.text }]}>{label}</Text>
+      <TextInput
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        placeholderTextColor={colors.textMuted}
+        editable={!disabled}
+        keyboardType={keyboardType ?? "default"}
+        autoCapitalize="none"
+        style={[styles.input, { color: colors.text, backgroundColor: colors.surface, borderColor: colors.border }]}
+      />
+    </View>
+  );
+}
+
 function validDate(value: string): boolean {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const date = new Date(`${value}T00:00:00Z`);
@@ -184,10 +212,10 @@ export default function PaddleQCreateSessionScreen({ navigation }: Props) {
             </View>
           )}
 
-          <Field label="Session date" value={sessionDate} onChangeText={setSessionDate} placeholder="YYYY-MM-DD" disabled={submitting} />
-          <Field label="Start time" value={startTime} onChangeText={setStartTime} placeholder="HH:MM (24-hour time)" disabled={submitting} />
-          <Field label="End time (optional)" value={endTime} onChangeText={setEndTime} placeholder="HH:MM" disabled={submitting} />
-          <Field label="Number of courts" value={courtCount} onChangeText={setCourtCount} placeholder="1" keyboardType="number-pad" disabled={submitting} />
+          <Field label="Session date" value={sessionDate} onChangeText={setSessionDate} placeholder="YYYY-MM-DD" disabled={submitting} colors={c} />
+          <Field label="Start time" value={startTime} onChangeText={setStartTime} placeholder="HH:MM (24-hour time)" disabled={submitting} colors={c} />
+          <Field label="End time (optional)" value={endTime} onChangeText={setEndTime} placeholder="HH:MM" disabled={submitting} colors={c} />
+          <Field label="Number of courts" value={courtCount} onChangeText={setCourtCount} placeholder="1" keyboardType="number-pad" disabled={submitting} colors={c} />
 
           {formError ? <ErrorMessage title="Unable to continue" message={formError} style={styles.formError} /> : null}
           <TouchableOpacity
@@ -204,26 +232,6 @@ export default function PaddleQCreateSessionScreen({ navigation }: Props) {
     </SafeAreaView>
   );
 
-  function Field({ label, value, onChangeText, placeholder, keyboardType, disabled }: {
-    label: string; value: string; onChangeText: (value: string) => void; placeholder: string;
-    keyboardType?: "default" | "number-pad"; disabled: boolean;
-  }) {
-    return (
-      <View style={styles.field}>
-        <Text style={[styles.label, { color: c.text }]}>{label}</Text>
-        <TextInput
-          value={value}
-          onChangeText={onChangeText}
-          placeholder={placeholder}
-          placeholderTextColor={c.textMuted}
-          editable={!disabled}
-          keyboardType={keyboardType ?? "default"}
-          autoCapitalize="none"
-          style={[styles.input, { color: c.text, backgroundColor: c.surface, borderColor: c.border }]}
-        />
-      </View>
-    );
-  }
 }
 
 const styles = StyleSheet.create({

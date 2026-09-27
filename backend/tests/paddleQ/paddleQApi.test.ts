@@ -23,6 +23,10 @@ function makeService() {
     updateSession: record("updateSession", { id: sessionId, status: "active" }),
     rotateOrganizerCapability: record("rotateOrganizerCapability", "rotated-capability"),
     revokeOrganizerCapability: record("revokeOrganizerCapability", undefined),
+    addPlayer: async (_sessionId: string, _capability: string, displayName: string) => {
+      calls.push({ method: "addPlayer", args: [_sessionId, _capability, displayName] });
+      return { player: { id: playerId, displayName, state: "waiting", queuePosition: 2 } as any, playerCredential: "must-not-escape-managed-response" };
+    },
     joinPlayer: record("joinPlayer", { player: { id: playerId, displayName: "Russel", state: "waiting", queuePosition: 1 }, playerCredential: "one-time-player-credential" }),
     rejoinPlayer: async (_sessionId: string, _playerId: string, credential: string) => {
       calls.push({ method: "rejoinPlayer", args: [_sessionId, _playerId, credential] });
@@ -97,6 +101,27 @@ describe("Paddle Q API", () => {
     assert.equal("playerCredentialHash" in json.data.player, false);
     assert.equal("organizerSecretHash" in json.data.player, false);
     assert.equal(calls.at(-1)?.method, "joinPlayer");
+  });
+
+  it("requires organizer capability for managed player creation and returns no player credential", async () => {
+    const missing = await request(`/${sessionId}/players/manage`, "POST", { displayName: "Ana" });
+    assert.equal(missing.response.status, 401);
+    assert.equal(missing.json.error.code, "ORGANIZER_CAPABILITY_REQUIRED");
+
+    const queryOnly = await request(`/${sessionId}/players/manage?organizerCapability=${capability}`, "POST", { displayName: "Ana" });
+    assert.equal(queryOnly.response.status, 401);
+
+    const invalidName = await request(`/${sessionId}/players/manage`, "POST", { displayName: "  " }, true);
+    assert.equal(invalidName.response.status, 400);
+
+    const { response, json } = await request(`/${sessionId}/players/manage`, "POST", { displayName: " Ana " }, true);
+    assert.equal(response.status, 201);
+    assert.equal(json.data.player.displayName, "Ana");
+    assert.equal("playerCredential" in json.data, false);
+    assert.equal("player_credential_hash" in json.data.player, false);
+    assert.equal("playerCredentialHash" in json.data.player, false);
+    assert.equal(JSON.stringify(json).includes("must-not-escape-managed-response"), false);
+    assert.deepEqual(calls.at(-1), { method: "addPlayer", args: [sessionId, capability, "Ana"] });
   });
 
   it("requires the player credential to rejoin the identified player", async () => {

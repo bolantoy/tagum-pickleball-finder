@@ -117,6 +117,15 @@ export const paddleQApi = {
     return request({ method: "POST", url: `${basePath}/${encodeURIComponent(sessionId)}/players`, data: { displayName } });
   },
 
+  addManagedPlayer(sessionId: string, capability: string, displayName: string): Promise<{ player: PaddleSessionPlayer }> {
+    return request({
+      method: "POST",
+      url: `${basePath}/${encodeURIComponent(sessionId)}/players/manage`,
+      headers: organizerHeaders(capability),
+      data: { displayName },
+    });
+  },
+
   rejoinPlayer(sessionId: string, playerId: string, credential: string): Promise<PaddleSessionPlayer> {
     return request({
       method: "POST",
