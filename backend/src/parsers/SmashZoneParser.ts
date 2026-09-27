@@ -61,10 +61,7 @@ export class SmashZoneParser implements IParser {
         ]);
 
       const courts = courtsResponse.data;
-      const availability = availabilityResponse.data.filter((record: AvailabilityRecord) => {
-        const court = courtsResponse.data.find((c) => c.id === record.courtId);
-        return court?.name === courtName;
-      });
+      const availability = availabilityResponse.data;
 
       const courtMap = new Map(
         courts.map((court) => [court.id, court])
