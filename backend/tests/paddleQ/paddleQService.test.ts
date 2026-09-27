@@ -188,6 +188,42 @@ describe("Paddle Q service", () => {
     assert.deepEqual(calls, ["pause", "remove", "move:2", "skip", "start:2", "complete:g1:11-7"]);
   });
 
+  it("builds a shared-pool recommendation from individually available courts", async () => {
+    const capability = await createOrganizerCapability();
+    const waiting = Array.from({ length: 8 }, (_, index) => player(`p${index + 1}`, `P${index + 1}`, "waiting", index + 1));
+    const occupiedGame: PaddleGameWithPlayers = {
+      id: "occupied-game", sessionId: "session-1", gameNumber: 3, courtNumber: 1,
+      team1Score: null, team2Score: null, winnerTeam: null, status: "in_progress",
+      startedAt: "2026-05-01T01:00:00.000Z", finishedAt: null, createdAt: "2026-05-01T01:00:00.000Z", participants: [],
+    };
+    const service = new PaddleQService(makeRepository({
+      getSession: async () => sessionRecord(capability.hash),
+      getPlayers: async () => waiting,
+      getGames: async () => [occupiedGame],
+    }), () => 0);
+    const result = await service.recommendNextRound("session-1");
+    assert.deepEqual(result.courts.map((court) => court.courtNumber), [2]);
+    assert.equal(result.sittingOut.length, 4);
+    assert.equal(result.metadata.availableCourtCount, 1);
+  });
+
+  it("rejects organizer assignments on an occupied court", async () => {
+    const capability = await createOrganizerCapability();
+    const occupiedGame: PaddleGameWithPlayers = {
+      id: "occupied-game", sessionId: "session-1", gameNumber: 3, courtNumber: 1,
+      team1Score: null, team2Score: null, winnerTeam: null, status: "in_progress",
+      startedAt: "2026-05-01T01:00:00.000Z", finishedAt: null, createdAt: "2026-05-01T01:00:00.000Z", participants: [],
+    };
+    const service = new PaddleQService(makeRepository({
+      getSession: async () => sessionRecord(capability.hash),
+      getPlayers: async () => [player("a", "A", "waiting", 1), player("b", "B", "waiting", 2), player("c", "C", "waiting", 3), player("d", "D", "waiting", 4)],
+      getGames: async () => [occupiedGame],
+    }));
+    await assert.rejects(service.recommendNextRound("session-1", {
+      forcedGames: [{ courtNumber: 1, team1PlayerIds: ["a", "b"], team2PlayerIds: ["c", "d"] }],
+    }), (error: Error) => error instanceof PaddleQServiceError && error.statusCode === 409);
+  });
+
   it("rejects invalid queue positions and game scores before persistence", async () => {
     const service = new PaddleQService(makeRepository());
     await assert.rejects(service.movePlayer("s", "secret", "p", 0), /positive integer/);

@@ -185,6 +185,19 @@ describe("Paddle Q API", () => {
     for (const method of ["recommendNextRound", "startRecommendedRound", "startGames", "completeGame", "cancelGame", "getCurrentGames", "getGameHistory"]) assert.ok(calls.some((call) => call.method === method));
   });
 
+  it("passes organizer-edited assignments to the authoritative recommendation path", async () => {
+    const forcedGames = [{
+      courtNumber: 1,
+      team1PlayerIds: [playerId, gameId],
+      team2PlayerIds: [sessionId, "44444444-4444-4444-8444-444444444444"],
+    }];
+    const { response } = await request(`/${sessionId}/games/recommended`, "POST", { constraints: { forcedGames } }, true);
+    assert.equal(response.status, 201);
+    const recommendationCall = calls.filter((call) => call.method === "recommendNextRound").at(-1);
+    assert.deepEqual(recommendationCall?.args, [sessionId, { forcedGames }, undefined]);
+    assert.ok(calls.some((call) => call.method === "startRecommendedRound"));
+  });
+
   it("validates UUIDs, player names, scores, and distinct game participants at the API boundary", async () => {
     const badId = await request("/not-a-uuid");
     assert.equal(badId.response.status, 400);

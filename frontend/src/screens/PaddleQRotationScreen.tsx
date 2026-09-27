@@ -12,7 +12,7 @@ import EmptyState from "../components/EmptyState";
 import ErrorMessage from "../components/ErrorMessage";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { PaddleQApiError, paddleQApi } from "../services/paddleQApi";
-import type { PaddleCourtRecommendation, PaddleRotationRecommendation } from "../types/paddleQ";
+import type { PaddleForcedGame, PaddleRotationPlayer, PaddleRotationRecommendation } from "../types/paddleQ";
 import type { PaddleQStackParamList } from "../navigation/types";
 
 type Props = NativeStackScreenProps<PaddleQStackParamList, "Rotation">;
@@ -59,6 +59,8 @@ export default function PaddleQRotationScreen({ navigation, route }: Props) {
   const [refreshing, setRefreshing] = useState(false);
   const [starting, setStarting] = useState(false);
   const [authorizationRejected, setAuthorizationRejected] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [editedGames, setEditedGames] = useState<PaddleForcedGame[] | null>(null);
   const [error, setError] = useState<{ title: string; message: string } | null>(null);
   const startLock = useRef(false);
   const loadLock = useRef(false);
@@ -73,6 +75,8 @@ export default function PaddleQRotationScreen({ navigation, route }: Props) {
       const next = await paddleQApi.recommendRotation(sessionId);
       if (!mounted.current) return;
       setRecommendation(next);
+      setEditedGames(null);
+      setEditing(false);
       setError(null);
       return true;
     } catch (reason) {
@@ -118,8 +122,9 @@ export default function PaddleQRotationScreen({ navigation, route }: Props) {
         setError({ title: "Organizer access required", message: "No organizer capability is saved on this device. The recommendation remains available in read-only mode." });
         return;
       }
-      // Intentionally send no preview assignment: the backend recomputes the round atomically.
-      await paddleQApi.startRecommendedRound(sessionId, capability);
+      // Organizer selections are constraints; the backend recomputes and validates
+      // them against its current waiting queue before atomically starting games.
+      await paddleQApi.startRecommendedRound(sessionId, capability, editedGames ? { constraints: { forcedGames: editedGames } } : undefined);
       navigation.navigate("SessionLobby", { sessionId });
     } catch (reason) {
       const mapped = startErrorMessage(reason);
@@ -138,6 +143,60 @@ export default function PaddleQRotationScreen({ navigation, route }: Props) {
       startLock.current = false;
       if (mounted.current) setStarting(false);
     }
+  };
+
+  const eligiblePlayers = React.useMemo(() => {
+    if (!recommendation) return [] as PaddleRotationPlayer[];
+    const byId = new Map<string, PaddleRotationPlayer>();
+    recommendation.courts.forEach((court) => [...court.team1, ...court.team2].forEach((player) => byId.set(player.id, player)));
+    recommendation.sittingOut.forEach((player) => byId.set(player.id, player));
+    return [...byId.values()].sort((a, b) => (a.queuePosition ?? Number.MAX_SAFE_INTEGER) - (b.queuePosition ?? Number.MAX_SAFE_INTEGER));
+  }, [recommendation]);
+  const playerById = React.useMemo(() => new Map(eligiblePlayers.map((player) => [player.id, player])), [eligiblePlayers]);
+  const visibleGames: PaddleForcedGame[] = editedGames ?? recommendation?.courts.map((court) => ({
+    courtNumber: court.courtNumber,
+    team1PlayerIds: [court.team1[0].id, court.team1[1].id],
+    team2PlayerIds: [court.team2[0].id, court.team2[1].id],
+  })) ?? [];
+  const visibleSittingOut = React.useMemo(() => {
+    const assigned = new Set(visibleGames.flatMap((game) => [...game.team1PlayerIds, ...game.team2PlayerIds]));
+    return eligiblePlayers.filter((player) => !assigned.has(player.id));
+  }, [eligiblePlayers, visibleGames]);
+
+  const beginEditing = () => {
+    if (!capabilityAvailable || !recommendation) return;
+    setEditedGames(recommendation.courts.map((court) => ({
+      courtNumber: court.courtNumber,
+      team1PlayerIds: [court.team1[0].id, court.team1[1].id],
+      team2PlayerIds: [court.team2[0].id, court.team2[1].id],
+    })));
+    setEditing(true);
+  };
+
+  const cycleAssignedPlayer = (gameIndex: number, team: 1 | 2, seat: 0 | 1, direction: -1 | 1) => {
+    setEditedGames((current) => {
+      if (!current || eligiblePlayers.length < 2) return current;
+      const currentIds = team === 1 ? current[gameIndex].team1PlayerIds : current[gameIndex].team2PlayerIds;
+      const currentId = currentIds[seat];
+      const currentIndex = eligiblePlayers.findIndex((player) => player.id === currentId);
+      const replacement = eligiblePlayers[(currentIndex + direction + eligiblePlayers.length) % eligiblePlayers.length];
+      if (!replacement || replacement.id === currentId) return current;
+      const next = current.map((game) => ({
+        ...game,
+        team1PlayerIds: [...game.team1PlayerIds] as [string, string],
+        team2PlayerIds: [...game.team2PlayerIds] as [string, string],
+      }));
+      const targetIds = team === 1 ? next[gameIndex].team1PlayerIds : next[gameIndex].team2PlayerIds;
+      const replacementIndex = next.findIndex((game) => [...game.team1PlayerIds, ...game.team2PlayerIds].includes(replacement.id));
+      if (replacementIndex >= 0) {
+        const assignedGame = next[replacementIndex];
+        const replacementTeam = assignedGame.team1PlayerIds.includes(replacement.id) ? assignedGame.team1PlayerIds : assignedGame.team2PlayerIds;
+        const replacementSeat = replacementTeam.indexOf(replacement.id);
+        replacementTeam[replacementSeat] = currentId;
+      }
+      targetIds[seat] = replacement.id;
+      return next;
+    });
   };
 
   const ctaCount = recommendation?.courts.length ?? 0;
@@ -173,29 +232,57 @@ export default function PaddleQRotationScreen({ navigation, route }: Props) {
           </View>
 
           <View style={[styles.summaryCard, { backgroundColor: c.surface, borderColor: c.border }]}>
-            <SummaryItem value={`${ctaCount}`} label={ctaCount === 1 ? "court in use" : "courts in use"} />
+            <SummaryItem value={`${ctaCount}`} label={ctaCount === 1 ? "court for next games" : "courts for next games"} />
             <View style={[styles.summaryDivider, { backgroundColor: c.border }]} />
             <SummaryItem value={`${waitingCount}`} label={waitingCount === 1 ? "waiting player" : "waiting players"} />
           </View>
 
           {recommendation.courts.length === 0 ? (
-            waitingCount === 0 ? (
+            (recommendation.metadata.availableCourtCount ?? 0) === 0 ? (
+              <EmptyState icon="tennisball-outline" title="All session courts are occupied" subtitle="A new game can be recommended when a court becomes available." style={styles.emptyState} />
+            ) : waitingCount === 0 ? (
               <EmptyState icon="people-outline" title="No players available" subtitle="Waiting players will appear in the next recommendation." style={styles.emptyState} />
             ) : (
               <EmptyState icon="people-outline" title="Not enough players for a game" subtitle={`${waitingCount} waiting ${waitingCount === 1 ? "player is" : "players are"} available. Four players are needed for each doubles game.`} style={styles.emptyState} />
             )
           ) : (
             <View style={styles.gameList}>
-              {recommendation.courts.map((court) => <RecommendedCourt key={court.courtNumber} court={court} />)}
+              {visibleGames.map((game, index) => (
+                <RecommendedCourt
+                  key={game.courtNumber}
+                  game={game}
+                  playerById={playerById}
+                  editing={editing && !starting}
+                  onCycle={(team, seat, direction) => cycleAssignedPlayer(index, team, seat, direction)}
+                />
+              ))}
             </View>
           )}
 
-          {recommendation.sittingOut.length > 0 ? (
+          {capabilityAvailable && recommendation.courts.length > 0 ? (
+            <View style={styles.editActions}>
+              {editing ? (
+                <>
+                  <TouchableOpacity style={[styles.editButton, starting && styles.disabled, { borderColor: c.border }]} onPress={() => { setEditedGames(null); setEditing(false); }} disabled={starting} accessibilityRole="button">
+                    <Text style={[styles.editButtonText, { color: c.text }]}>Use Recommendation</Text>
+                  </TouchableOpacity>
+                  <Text style={[styles.editHint, { color: c.textSecondary }]}>Organizer edits are checked against the current waiting queue when started.</Text>
+                </>
+              ) : (
+                <TouchableOpacity style={[styles.editButton, starting && styles.disabled, { borderColor: c.border }]} onPress={beginEditing} disabled={starting} accessibilityRole="button">
+                  <Ionicons name="create-outline" size={18} color={Colors.brand.primary} />
+                  <Text style={[styles.editButtonText, { color: c.text }]}>Edit Proposed Players</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          ) : null}
+
+          {visibleSittingOut.length > 0 ? (
             <View>
               <Text style={[styles.sectionTitle, { color: c.text }]}>Waiting This Round</Text>
               <Text style={[styles.sectionSubtitle, { color: c.textSecondary }]}>These players remain in the shared queue.</Text>
               <View style={styles.waitingList}>
-                {recommendation.sittingOut.map((player) => (
+                {visibleSittingOut.map((player) => (
                   <View key={player.id} style={[styles.waitingRow, { backgroundColor: c.surface, borderColor: c.border }]} accessibilityLabel={`${player.displayName}, waiting this round`}>
                     <View style={[styles.waitingPosition, { backgroundColor: c.surfaceHigh }]}><Text style={[styles.waitingPositionText, { color: c.textSecondary }]}>{player.queuePosition ?? "—"}</Text></View>
                     <Text style={[styles.waitingName, { color: c.text }]}>{player.displayName}</Text>
@@ -210,7 +297,7 @@ export default function PaddleQRotationScreen({ navigation, route }: Props) {
             <View style={[styles.accessNotice, { backgroundColor: c.surfaceHigh }]}><Ionicons name="eye-outline" size={19} color={c.textSecondary} /><Text style={[styles.accessText, { color: c.textSecondary }]}>Read-only mode. Return to the lobby to continue.</Text></View>
           ) : capabilityAvailable ? recommendation.courts.length > 0 ? (
             <TouchableOpacity style={[styles.startButton, starting && styles.disabled]} onPress={() => void startRound()} disabled={starting} accessibilityRole="button">
-              {starting ? <LoadingSpinner size="small" /> : <><Ionicons name="play-circle-outline" size={21} color="#FFFFFF" /><Text style={styles.startButtonText}>Start Recommended Round</Text></>}
+              {starting ? <LoadingSpinner size="small" /> : <><Ionicons name="play-circle-outline" size={21} color="#FFFFFF" /><Text style={styles.startButtonText}>{editedGames ? "Start Edited Round" : "Start Recommended Round"}</Text></>}
             </TouchableOpacity>
           ) : null : (
             <View style={[styles.accessNotice, { backgroundColor: c.surfaceHigh }]}><Ionicons name="lock-closed-outline" size={18} color={c.textSecondary} /><Text style={[styles.accessText, { color: c.textSecondary }]}>Organizer access is required to start this round. You can still review the recommendation.</Text></View>
@@ -226,19 +313,46 @@ function SummaryItem({ value, label }: { value: string; label: string }) {
   return <View style={styles.summaryItem}><Text style={[styles.summaryValue, { color: theme.colors.text }]}>{value}</Text><Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>{label}</Text></View>;
 }
 
-function RecommendedCourt({ court }: { court: PaddleCourtRecommendation }) {
+function RecommendedCourt({ game, playerById, editing, onCycle }: {
+  game: PaddleForcedGame;
+  playerById: Map<string, PaddleRotationPlayer>;
+  editing: boolean;
+  onCycle: (team: 1 | 2, seat: 0 | 1, direction: -1 | 1) => void;
+}) {
   const { theme } = useTheme();
   const c = theme.colors;
+  const team1 = game.team1PlayerIds.map((id) => playerById.get(id)?.displayName ?? "Player unavailable");
+  const team2 = game.team2PlayerIds.map((id) => playerById.get(id)?.displayName ?? "Player unavailable");
   return (
-    <View style={[styles.courtCard, { backgroundColor: c.surface, borderColor: c.border }]} accessibilityLabel={`Proposed court ${court.courtNumber}: Team one ${court.team1.map((player) => player.displayName).join(" and ")}; Team two ${court.team2.map((player) => player.displayName).join(" and ")}`}>
-      <View style={styles.courtHeading}><Ionicons name="tennisball-outline" size={18} color={Colors.brand.primary} /><Text style={[styles.courtTitle, { color: c.text }]}>Court {court.courtNumber}</Text><View style={styles.proposedTag}><Text style={styles.proposedText}>Proposed</Text></View></View>
-      <Team players={court.team1.map((player) => player.displayName)} label="Team 1 · Playing" />
+    <View style={[styles.courtCard, { backgroundColor: c.surface, borderColor: c.border }]} accessibilityLabel={`Proposed court ${game.courtNumber}: Team one ${team1.join(" and ")}; Team two ${team2.join(" and ")}`}>
+      <View style={styles.courtHeading}><Ionicons name="tennisball-outline" size={18} color={Colors.brand.primary} /><Text style={[styles.courtTitle, { color: c.text }]}>Court {game.courtNumber}</Text><View style={styles.proposedTag}><Text style={styles.proposedText}>Proposed</Text></View></View>
+      <Team players={team1} label="Team 1 - Playing" />
+      {editing ? <SeatEditor team={1} playerIds={game.team1PlayerIds} onCycle={onCycle} /> : null}
       <View style={[styles.divider, { borderColor: c.border }]}><Text style={[styles.vs, { color: c.textMuted }]}>VS</Text></View>
-      <Team players={court.team2.map((player) => player.displayName)} label="Team 2 · Playing" />
+      <Team players={team2} label="Team 2 - Playing" />
+      {editing ? <SeatEditor team={2} playerIds={game.team2PlayerIds} onCycle={onCycle} /> : null}
     </View>
   );
 }
 
+function SeatEditor({ team, playerIds, onCycle }: {
+  team: 1 | 2;
+  playerIds: [string, string];
+  onCycle: (team: 1 | 2, seat: 0 | 1, direction: -1 | 1) => void;
+}) {
+  const { theme } = useTheme();
+  return <View style={styles.seatEditor}>{playerIds.map((id, seat) => (
+    <View key={`${team}-${seat}-${id}`} style={styles.seatControl}>
+      <TouchableOpacity onPress={() => onCycle(team, seat as 0 | 1, -1)} style={styles.seatArrow} accessibilityRole="button" accessibilityLabel={`Change team ${team} player ${seat + 1} to previous eligible player`}>
+        <Ionicons name="chevron-back" size={18} color={Colors.brand.primary} />
+      </TouchableOpacity>
+      <Text style={[styles.seatLabel, { color: theme.colors.textSecondary }]}>Change player {seat + 1}</Text>
+      <TouchableOpacity onPress={() => onCycle(team, seat as 0 | 1, 1)} style={styles.seatArrow} accessibilityRole="button" accessibilityLabel={`Change team ${team} player ${seat + 1} to next eligible player`}>
+        <Ionicons name="chevron-forward" size={18} color={Colors.brand.primary} />
+      </TouchableOpacity>
+    </View>
+  ))}</View>;
+}
 function Team({ players, label }: { players: string[]; label: string }) {
   const { theme } = useTheme();
   return <View style={styles.team}><Text style={[styles.teamLabel, { color: theme.colors.textMuted }]}>{label}</Text><Text style={[styles.teamPlayers, { color: theme.colors.text }]}>{players.join(" + ")}</Text></View>;
@@ -250,19 +364,19 @@ const styles = StyleSheet.create({
   backButton: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
   topBarTitle: { flex: 1, textAlign: "center", fontSize: Typography.bodyLarge, fontWeight: FontWeight.bold },
   refreshButton: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
-  content: { padding: Spacing.lg, paddingBottom: Spacing.xxxl },
+  content: { padding: Spacing.md, paddingBottom: Spacing.xl },
   errorCard: { marginHorizontal: 0, marginTop: 0 },
-  previewBanner: { padding: Spacing.lg, borderRadius: Radius.lg, borderWidth: 1, gap: Spacing.sm },
+  previewBanner: { padding: Spacing.md, borderRadius: Radius.lg, borderWidth: 1, gap: Spacing.sm },
   previewTitleRow: { flexDirection: "row", alignItems: "center", gap: Spacing.sm },
-  previewTitle: { fontSize: Typography.cardTitle, fontWeight: FontWeight.bold },
+  previewTitle: { fontSize: Typography.bodyLarge, fontWeight: FontWeight.bold },
   previewCopy: { fontSize: Typography.bodySmall, lineHeight: 20 },
-  summaryCard: { minHeight: 78, borderWidth: 1, borderRadius: Radius.md, flexDirection: "row", alignItems: "center", justifyContent: "space-around", marginTop: Spacing.md, marginBottom: Spacing.xl },
+  summaryCard: { minHeight: 66, borderWidth: 1, borderRadius: Radius.md, flexDirection: "row", alignItems: "center", justifyContent: "space-around", marginTop: Spacing.sm, marginBottom: Spacing.md },
   summaryItem: { alignItems: "center", gap: Spacing.xs },
   summaryValue: { fontSize: Typography.bodyLarge, fontWeight: FontWeight.bold },
   summaryLabel: { fontSize: Typography.caption },
   summaryDivider: { width: 1, height: 38 },
-  gameList: { gap: Spacing.md, marginBottom: Spacing.xl },
-  courtCard: { padding: Spacing.lg, borderWidth: 1, borderRadius: Radius.lg, gap: Spacing.md },
+  gameList: { gap: Spacing.sm, marginBottom: Spacing.md },
+  courtCard: { padding: Spacing.md, borderWidth: 1, borderRadius: Radius.lg, gap: Spacing.sm },
   courtHeading: { flexDirection: "row", alignItems: "center", gap: Spacing.sm },
   courtTitle: { flex: 1, fontSize: Typography.body, fontWeight: FontWeight.bold },
   proposedTag: { borderRadius: Radius.pill, backgroundColor: "rgba(34,197,94,0.14)", paddingHorizontal: Spacing.sm, paddingVertical: Spacing.xs },
@@ -270,12 +384,20 @@ const styles = StyleSheet.create({
   team: { gap: Spacing.xs },
   teamLabel: { fontSize: Typography.caption, fontWeight: FontWeight.semibold },
   teamPlayers: { fontSize: Typography.body, fontWeight: FontWeight.semibold },
+  seatEditor: { gap: Spacing.xs },
+  seatControl: { minHeight: 40, flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderRadius: Radius.sm, backgroundColor: "rgba(34,197,94,0.08)" },
+  seatArrow: { width: 44, height: 40, alignItems: "center", justifyContent: "center" },
+  seatLabel: { fontSize: Typography.caption, fontWeight: FontWeight.semibold },
+  editActions: { gap: Spacing.sm, marginBottom: Spacing.md },
+  editButton: { minHeight: 44, borderWidth: 1, borderRadius: Radius.md, paddingHorizontal: Spacing.md, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: Spacing.sm },
+  editButtonText: { fontSize: Typography.bodySmall, fontWeight: FontWeight.semibold },
+  editHint: { fontSize: Typography.caption, textAlign: "center" },
   divider: { borderTopWidth: 1, alignItems: "center" },
   vs: { fontSize: 10, fontWeight: FontWeight.bold, marginTop: -7, paddingHorizontal: Spacing.sm },
-  emptyState: { paddingVertical: Spacing.xl },
-  sectionTitle: { marginTop: Spacing.md, fontSize: Typography.cardTitle, fontWeight: FontWeight.bold },
+  emptyState: { paddingVertical: Spacing.md },
+  sectionTitle: { marginTop: Spacing.sm, fontSize: Typography.bodyLarge, fontWeight: FontWeight.bold },
   sectionSubtitle: { marginTop: Spacing.xs, marginBottom: Spacing.md, fontSize: Typography.caption },
-  waitingList: { gap: Spacing.sm, marginBottom: Spacing.xl },
+  waitingList: { gap: Spacing.sm, marginBottom: Spacing.md },
   waitingRow: { minHeight: 58, borderWidth: 1, borderRadius: Radius.md, padding: Spacing.md, flexDirection: "row", alignItems: "center", gap: Spacing.md },
   waitingPosition: { minWidth: 32, height: 32, borderRadius: Radius.pill, alignItems: "center", justifyContent: "center", paddingHorizontal: Spacing.xs },
   waitingPositionText: { fontSize: Typography.caption, fontWeight: FontWeight.bold },
@@ -283,7 +405,7 @@ const styles = StyleSheet.create({
   waitingTag: { fontSize: Typography.caption },
   accessNotice: { flexDirection: "row", alignItems: "center", gap: Spacing.sm, borderRadius: Radius.md, padding: Spacing.md, marginTop: Spacing.lg },
   accessText: { flex: 1, fontSize: Typography.bodySmall, lineHeight: 20 },
-  startButton: { minHeight: 56, borderRadius: Radius.md, backgroundColor: Colors.brand.primary, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: Spacing.sm, paddingHorizontal: Spacing.lg, marginTop: Spacing.lg },
-  startButtonText: { color: "#FFFFFF", fontSize: Typography.body, fontWeight: FontWeight.bold },
+  startButton: { minHeight: 48, borderRadius: Radius.md, backgroundColor: Colors.brand.primary, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: Spacing.sm, paddingHorizontal: Spacing.md, marginTop: Spacing.md },
+  startButtonText: { color: "#FFFFFF", fontSize: Typography.bodySmall, fontWeight: FontWeight.bold },
   disabled: { opacity: 0.55 },
 });

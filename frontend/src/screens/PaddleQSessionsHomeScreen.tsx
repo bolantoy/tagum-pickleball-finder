@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import {
+  Alert,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -36,11 +37,16 @@ export default function PaddleQSessionsHomeScreen({ navigation }: Props) {
   const [loadError, setLoadError] = useState(false);
   const [rejoiningSessionId, setRejoiningSessionId] = useState<string | null>(null);
   const [rejoinError, setRejoinError] = useState<{ sessionId: string; message: string } | null>(null);
+  const [removeError, setRemoveError] = useState<{ sessionId: string; message: string } | null>(null);
   const requestLock = useRef(false);
+  const refreshAgain = useRef(false);
   const rejoinLock = useRef(false);
 
   const loadSessions = useCallback(async () => {
-    if (requestLock.current) return;
+    if (requestLock.current) {
+      refreshAgain.current = true;
+      return;
+    }
     requestLock.current = true;
     setLoading(true);
     setLoadError(false);
@@ -49,8 +55,11 @@ export default function PaddleQSessionsHomeScreen({ navigation }: Props) {
     } catch {
       setLoadError(true);
     } finally {
+      const shouldRefreshAgain = refreshAgain.current;
+      refreshAgain.current = false;
       requestLock.current = false;
       setLoading(false);
+      if (shouldRefreshAgain) void loadSessions();
     }
   }, [getRememberedSessions]);
 
@@ -85,6 +94,31 @@ export default function PaddleQSessionsHomeScreen({ navigation }: Props) {
       rejoinLock.current = false;
       setRejoiningSessionId(null);
     }
+  };
+
+  const confirmRemoveRememberedSession = (session: RememberedPaddleSession) => {
+    Alert.alert(
+      "Remove remembered session?",
+      "This only removes the session shortcut from this device. It will not end the session or remove saved credentials.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Remove",
+          style: "destructive",
+          onPress: () => {
+            void (async () => {
+              try {
+                await storage.removeRememberedSession(session.sessionId);
+                setRemoveError(null);
+                await loadSessions();
+              } catch {
+                setRemoveError({ sessionId: session.sessionId, message: "This session could not be removed from the device. Try again." });
+              }
+            })();
+          },
+        },
+      ]
+    );
   };
 
   const c = theme.colors;
@@ -151,6 +185,8 @@ export default function PaddleQSessionsHomeScreen({ navigation }: Props) {
                 onRejoin={session.playerId ? () => void rejoinRememberedSession(session) : undefined}
                 rejoining={rejoiningSessionId === session.sessionId}
                 rejoinError={rejoinError?.sessionId === session.sessionId ? rejoinError.message : undefined}
+                onRemove={() => confirmRemoveRememberedSession(session)}
+                removeError={removeError?.sessionId === session.sessionId ? removeError.message : undefined}
               />
             ))}
           </View>
@@ -186,12 +222,14 @@ function SecondaryAction({ title, icon, onPress }: { title: string; icon: keyof 
   );
 }
 
-function RememberedSessionCard({ session, onPress, onRejoin, rejoining, rejoinError }: {
+function RememberedSessionCard({ session, onPress, onRejoin, rejoining, rejoinError, onRemove, removeError }: {
   session: RememberedPaddleSession;
   onPress: () => void;
   onRejoin?: () => void;
   rejoining: boolean;
   rejoinError?: string;
+  onRemove: () => void;
+  removeError?: string;
 }) {
   const { theme } = useTheme();
   const c = theme.colors;
@@ -223,24 +261,29 @@ function RememberedSessionCard({ session, onPress, onRejoin, rejoining, rejoinEr
         </TouchableOpacity>
       ) : null}
       {rejoinError ? <Text style={[styles.rejoinError, { color: Colors.unavailable }]} accessibilityRole="alert">{rejoinError}</Text> : null}
+      <TouchableOpacity style={[styles.removeButton, { borderColor: c.border }]} onPress={onRemove} accessibilityRole="button" accessibilityLabel="Remove remembered session from this device">
+        <Ionicons name="trash-outline" size={16} color={Colors.unavailable} />
+        <Text style={[styles.removeButtonText, { color: Colors.unavailable }]}>Remove remembered session</Text>
+      </TouchableOpacity>
+      {removeError ? <Text style={[styles.rejoinError, { color: Colors.unavailable }]} accessibilityRole="alert">{removeError}</Text> : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  content: { paddingHorizontal: Spacing.lg, paddingBottom: Spacing.xxxl },
-  header: { paddingTop: Spacing.xl, paddingBottom: Spacing.xl },
+  content: { paddingHorizontal: Spacing.md, paddingBottom: Spacing.xl },
+  header: { paddingTop: Spacing.md, paddingBottom: Spacing.md },
   titleRow: { flexDirection: "row", alignItems: "center", gap: Spacing.md },
-  titleIcon: { width: 48, height: 48, borderRadius: Radius.md, alignItems: "center", justifyContent: "center" },
+  titleIcon: { width: 42, height: 42, borderRadius: Radius.md, alignItems: "center", justifyContent: "center" },
   titleCopy: { flex: 1 },
-  title: { fontSize: Typography.sectionTitle, fontWeight: FontWeight.bold },
+  title: { fontSize: Typography.cardTitle, fontWeight: FontWeight.bold },
   subtitle: { marginTop: Spacing.xs, fontSize: Typography.bodySmall },
-  description: { marginTop: Spacing.lg, fontSize: Typography.body, lineHeight: 23 },
-  actions: { gap: Spacing.md },
+  description: { marginTop: Spacing.sm, fontSize: Typography.bodySmall, lineHeight: 20 },
+  actions: { gap: Spacing.sm },
   primaryAction: {
-    minHeight: 56,
-    paddingHorizontal: Spacing.lg,
+    minHeight: 48,
+    paddingHorizontal: Spacing.md,
     borderRadius: Radius.md,
     backgroundColor: Colors.brand.primary,
     flexDirection: "row",
@@ -249,8 +292,8 @@ const styles = StyleSheet.create({
   },
   primaryActionText: { flex: 1, color: "#FFFFFF", fontSize: Typography.body, fontWeight: FontWeight.semibold },
   secondaryAction: {
-    minHeight: 56,
-    paddingHorizontal: Spacing.lg,
+    minHeight: 48,
+    paddingHorizontal: Spacing.md,
     borderRadius: Radius.md,
     borderWidth: 1,
     flexDirection: "row",
@@ -258,26 +301,26 @@ const styles = StyleSheet.create({
     gap: Spacing.md,
   },
   secondaryActionText: { flex: 1, fontSize: Typography.body, fontWeight: FontWeight.semibold },
-  sectionHeader: { marginTop: Spacing.xxxl, marginBottom: Spacing.md, flexDirection: "row", alignItems: "center", gap: Spacing.sm },
-  sectionTitle: { fontSize: Typography.cardTitle, fontWeight: FontWeight.semibold },
+  sectionHeader: { marginTop: Spacing.xl, marginBottom: Spacing.sm, flexDirection: "row", alignItems: "center", gap: Spacing.sm },
+  sectionTitle: { fontSize: Typography.bodyLarge, fontWeight: FontWeight.semibold },
   count: { fontSize: Typography.bodySmall },
-  emptyState: { paddingHorizontal: Spacing.md },
-  sessionList: { gap: Spacing.md },
+  emptyState: { paddingHorizontal: Spacing.md, paddingVertical: Spacing.md },
+  sessionList: { gap: Spacing.sm },
   sessionCard: {
     minHeight: 84,
-    paddingHorizontal: Spacing.lg,
+    paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.md,
     borderWidth: 1,
     borderRadius: Radius.md,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: Spacing.md,
+    gap: Spacing.sm,
   },
-  sessionCardText: { flex: 1, gap: Spacing.xs },
+  sessionCardText: { gap: Spacing.xs },
   sessionName: { fontSize: Typography.body, fontWeight: FontWeight.semibold },
   sessionMeta: { fontSize: Typography.bodySmall },
   sessionRole: { fontSize: Typography.caption },
-  rejoinButton: { minHeight: 42, marginTop: Spacing.md, paddingHorizontal: Spacing.md, borderWidth: 1, borderRadius: Radius.sm, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: Spacing.sm },
+  rejoinButton: { minHeight: 42, marginTop: Spacing.sm, paddingHorizontal: Spacing.md, borderWidth: 1, borderRadius: Radius.sm, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: Spacing.sm },
   rejoinButtonText: { fontSize: Typography.bodySmall, fontWeight: FontWeight.semibold },
   rejoinError: { marginTop: Spacing.sm, fontSize: Typography.caption, lineHeight: 18 },
+  removeButton: { minHeight: 40, borderWidth: 1, borderRadius: Radius.sm, paddingHorizontal: Spacing.sm, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: Spacing.xs },
+  removeButtonText: { fontSize: Typography.caption, fontWeight: FontWeight.semibold },
 });

@@ -52,6 +52,8 @@ export interface PaddleRotationSnapshot {
   completedGames: PaddleRotationGameHistory[];
   courtCount: number;
   courtsToPlay?: number;
+  /** Session courts without an in-progress game; defaults to every court. */
+  availableCourtNumbers?: number[];
 }
 
 export interface PaddleCourtRecommendation {
@@ -73,6 +75,7 @@ export interface PaddleRotationRecommendation {
     partnerRepeatCost: number;
     opponentRepeatCost: number;
     tieBreakCandidates: number;
+    availableCourtCount: number;
   };
 }
 
@@ -188,10 +191,14 @@ export function recommendPaddleRotation(
   if (!Number.isInteger(snapshot.courtCount) || snapshot.courtCount < 1) {
     throw new Error("Session courtCount must be a positive integer");
   }
-  const requestedCourts = snapshot.courtsToPlay ?? snapshot.courtCount;
-  if (!Number.isInteger(requestedCourts) || requestedCourts < 1 || requestedCourts > snapshot.courtCount) {
+  const availableCourtNumbers = snapshot.availableCourtNumbers ?? Array.from({ length: snapshot.courtCount }, (_, index) => index + 1);
+  if (new Set(availableCourtNumbers).size !== availableCourtNumbers.length || availableCourtNumbers.some((court) => !Number.isInteger(court) || court < 1 || court > snapshot.courtCount)) {
+    throw new Error("availableCourtNumbers must contain unique valid session court numbers");
+  }
+  if (snapshot.courtsToPlay !== undefined && (!Number.isInteger(snapshot.courtsToPlay) || snapshot.courtsToPlay < 1 || snapshot.courtsToPlay > snapshot.courtCount)) {
     throw new Error("courtsToPlay must be between one and the session court count");
   }
+  const requestedCourts = Math.min(snapshot.courtsToPlay ?? availableCourtNumbers.length, availableCourtNumbers.length);
 
   const waiting = snapshot.players.filter((player) => player.state === "waiting");
   const ids = new Set<string>();
@@ -216,6 +223,9 @@ export function recommendPaddleRotation(
   const waitingById = new Map(waiting.map((player) => [player.id, player]));
   const excluded = new Set(constraints.excludedPlayerIds ?? []);
   const forcedByCourt = getForcedPlayers(constraints.forcedGames ?? [], waitingById, snapshot.courtCount);
+  for (const courtNumber of forcedByCourt.keys()) {
+    if (!availableCourtNumbers.includes(courtNumber)) throw new Error(`Court ${courtNumber} is not available for a new game`);
+  }
   const forcedPlayerIds = new Set([...forcedByCourt.values()].flat().map((player) => player.id));
   for (const forcedId of forcedPlayerIds) {
     if (excluded.has(forcedId)) throw new Error(`Forced player ${forcedId} is also excluded`);
@@ -258,7 +268,7 @@ export function recommendPaddleRotation(
     for (const player of players) assigned.add(player.id);
   }
   const remainingPlayers = selectedPlayers.filter((player) => !assigned.has(player.id));
-  const openCourtNumbers = Array.from({ length: snapshot.courtCount }, (_, index) => index + 1)
+  const openCourtNumbers = availableCourtNumbers
     .filter((number) => !forcedByCourt.has(number))
     .slice(0, actualCourtCount - forcedByCourt.size);
   for (let i = 0; i < openCourtNumbers.length; i += 1) {
@@ -339,6 +349,7 @@ export function recommendPaddleRotation(
       partnerRepeatCost: selectedPlan?.partnerCost ?? 0,
       opponentRepeatCost: selectedPlan?.opponentCost ?? 0,
       tieBreakCandidates,
+      availableCourtCount: availableCourtNumbers.length,
     },
   };
 }

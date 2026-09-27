@@ -90,6 +90,39 @@ describe("Paddle Q rotation engine", () => {
     assert.equal(new Set(selectedIds(result)).size, 8);
   });
 
+  it("starts a game on a free court while another session court is occupied", () => {
+    const result = recommendPaddleRotation({ ...makeSnapshot(8, 2), availableCourtNumbers: [2] }, fixedRandom());
+    assert.deepEqual(result.courts.map((court) => court.courtNumber), [2]);
+    assert.equal(result.courts.length, 1);
+    assert.equal(result.sittingOut.length, 4);
+    assert.equal(result.metadata.availableCourtCount, 1);
+  });
+
+  it("uses both available courts when eight players are waiting", () => {
+    const result = recommendPaddleRotation({ ...makeSnapshot(8, 2), availableCourtNumbers: [1, 2] }, fixedRandom());
+    assert.deepEqual(result.courts.map((court) => court.courtNumber), [1, 2]);
+    assert.equal(new Set(selectedIds(result)).size, 8);
+  });
+
+  it("starts only one game when two courts are free but only four players wait", () => {
+    const result = recommendPaddleRotation({ ...makeSnapshot(4, 2), availableCourtNumbers: [1, 2] }, fixedRandom());
+    assert.equal(result.courts.length, 1);
+    assert.deepEqual(result.sittingOut, []);
+  });
+
+  it("does not recommend a game when every session court is occupied", () => {
+    const result = recommendPaddleRotation({ ...makeSnapshot(4, 2), availableCourtNumbers: [] }, fixedRandom());
+    assert.equal(result.courts.length, 0);
+    assert.equal(result.sittingOut.length, 4);
+    assert.equal(result.metadata.availableCourtCount, 0);
+  });
+
+  it("rejects organizer assignments to an occupied court", () => {
+    assert.throws(() => recommendPaddleRotation({ ...makeSnapshot(4, 2), availableCourtNumbers: [2] }, fixedRandom(), {
+      forcedGames: [{ courtNumber: 1, team1PlayerIds: ["A", "B"], team2PlayerIds: ["C", "D"] }],
+    }), /not available/);
+  });
+
   it("keeps game distribution balanced over simulated games for 5, 6, 7, and 8 players", () => {
     for (const playerCount of [5, 6, 7, 8]) {
       let snapshot = makeSnapshot(playerCount, 2);

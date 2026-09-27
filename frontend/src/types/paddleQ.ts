@@ -76,6 +76,7 @@ export interface PaddleRotationRecommendation {
     partnerRepeatCost: number;
     opponentRepeatCost: number;
     tieBreakCandidates: number;
+    availableCourtCount: number;
   };
 }
 

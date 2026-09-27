@@ -319,28 +319,36 @@ export class PaddleQService {
         gameCounts.set(participant.sessionPlayerId, (gameCounts.get(participant.sessionPlayerId) ?? 0) + 1);
       }
     }
-    return recommendPaddleRotation({
-      players: players.map((player) => ({
-        id: player.id,
-        displayName: player.displayName,
-        state: player.state,
-        queuePosition: player.queuePosition,
-        joinedAt: player.joinedAt,
-        gamesPlayed: gameCounts.get(player.id) ?? 0,
-      })),
-      completedGames: games.filter((game) => game.status === "completed").map((game) => ({
-        gameNumber: game.gameNumber,
-        courtNumber: game.courtNumber,
-        startedAt: game.startedAt,
-        finishedAt: game.finishedAt ?? game.startedAt,
-        participants: game.participants.map((participant) => ({
-          playerId: participant.sessionPlayerId,
-          teamNumber: participant.teamNumber,
+    const inProgressCourts = new Set(games.filter((game) => game.status === "in_progress").map((game) => game.courtNumber));
+    const availableCourtNumbers = Array.from({ length: session.courtCount }, (_, index) => index + 1)
+      .filter((courtNumber) => !inProgressCourts.has(courtNumber));
+    try {
+      return recommendPaddleRotation({
+        players: players.map((player) => ({
+          id: player.id,
+          displayName: player.displayName,
+          state: player.state,
+          queuePosition: player.queuePosition,
+          joinedAt: player.joinedAt,
+          gamesPlayed: gameCounts.get(player.id) ?? 0,
         })),
-      })),
-      courtCount: session.courtCount,
-      courtsToPlay,
-    }, this.randomSource, constraints);
+        completedGames: games.filter((game) => game.status === "completed").map((game) => ({
+          gameNumber: game.gameNumber,
+          courtNumber: game.courtNumber,
+          startedAt: game.startedAt,
+          finishedAt: game.finishedAt ?? game.startedAt,
+          participants: game.participants.map((participant) => ({
+            playerId: participant.sessionPlayerId,
+            teamNumber: participant.teamNumber,
+          })),
+        })),
+        courtCount: session.courtCount,
+        availableCourtNumbers,
+        courtsToPlay,
+      }, this.randomSource, constraints);
+    } catch (error) {
+      throw new PaddleQServiceError(error instanceof Error ? error.message : "Rotation constraints are invalid", 409);
+    }
   }
 
   async startGames(sessionId: string, secret: string, games: ForcedPaddleGame[]): Promise<PaddleGameWithPlayers[]> {

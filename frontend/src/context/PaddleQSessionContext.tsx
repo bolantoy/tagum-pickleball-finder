@@ -24,6 +24,7 @@ interface PaddleQSessionContextValue {
   removePlayerCredential: (sessionId: string, playerId: string) => Promise<void>;
   saveRememberedSession: (session: Omit<RememberedPaddleSession, "lastOpenedAt"> & { lastOpenedAt?: string }) => Promise<void>;
   getRememberedSessions: () => Promise<RememberedPaddleSession[]>;
+  removeRememberedSession: (sessionId: string) => Promise<void>;
 }
 
 const PaddleQSessionContext = createContext<PaddleQSessionContextValue | undefined>(undefined);
@@ -150,6 +151,20 @@ export function PaddleQSessionProvider({ children }: { children: React.ReactNode
     }
   }, []);
 
+  const removeRememberedSession = useCallback(async (sessionId: string) => {
+    let sessions: RememberedPaddleSession[] = [];
+    try {
+      const raw = await AsyncStorage.getItem(REMEMBERED_SESSIONS_KEY);
+      const parsed: unknown = raw ? JSON.parse(raw) : [];
+      if (Array.isArray(parsed)) {
+        sessions = parsed.map(normalizeRememberedSession).filter((item): item is RememberedPaddleSession => item !== null);
+      }
+    } catch {
+      sessions = [];
+    }
+    await AsyncStorage.setItem(REMEMBERED_SESSIONS_KEY, JSON.stringify(sessions.filter((item) => item.sessionId !== sessionId)));
+  }, []);
+
   const value = useMemo(() => ({
     saveOrganizerCapability,
     getOrganizerCapability,
@@ -159,6 +174,7 @@ export function PaddleQSessionProvider({ children }: { children: React.ReactNode
     removePlayerCredential,
     saveRememberedSession,
     getRememberedSessions,
+    removeRememberedSession,
   }), [
     saveOrganizerCapability,
     getOrganizerCapability,
@@ -168,6 +184,7 @@ export function PaddleQSessionProvider({ children }: { children: React.ReactNode
     removePlayerCredential,
     saveRememberedSession,
     getRememberedSessions,
+    removeRememberedSession,
   ]);
 
   return <PaddleQSessionContext.Provider value={value}>{children}</PaddleQSessionContext.Provider>;
