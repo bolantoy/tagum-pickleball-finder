@@ -36,6 +36,7 @@ import { PickleVillageParser } from "./PickleVillageParser";
 import { PaddleHideoutParser } from "./PaddleHideoutParser";
 import { PaddleArenaParser } from "./PaddleArenaParser";
 import { SportsCaveParser } from "./SportsCaveParser";
+import { SmashZoneParser } from "./SmashZoneParser";
 
 /**
  * Registry maps parser_name → parser instance.
@@ -72,6 +73,7 @@ const PARSER_REGISTRY: Record<string, IParser> = {
   paddle_hideout: new PaddleHideoutParser(),
   paddle_arena: new PaddleArenaParser(),
   sports_cave: new SportsCaveParser(),
+  smash_zone: new SmashZoneParser(),
 };
 
 /**
@@ -99,3 +101,4 @@ export function getAllParsers(): IParser[] {
 export function getParserNames(): string[] {
   return Object.keys(PARSER_REGISTRY);
 }
+
