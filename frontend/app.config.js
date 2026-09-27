@@ -48,6 +48,7 @@ export default {
           imageWidth: 200,
         },
       ],
+      "expo-secure-store",
     ],
 
     extra: {

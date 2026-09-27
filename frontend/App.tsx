@@ -8,6 +8,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "./src/context/ThemeContext";
 import { FavoritesProvider } from "./src/context/FavoritesContext";
 import { ScheduleProvider } from "./src/context/ScheduleContext";
+import { PaddleQSessionProvider } from "./src/context/PaddleQSessionContext";
 import AppNavigator from "./src/navigation/AppNavigator";
 
 SplashScreen.setOptions({
@@ -50,11 +51,13 @@ export default function App() {
     >
       <SafeAreaProvider>
         <ThemeProvider>
-          <FavoritesProvider>
-            <ScheduleProvider>
-              <AppNavigator />
-            </ScheduleProvider>
-          </FavoritesProvider>
+          <PaddleQSessionProvider>
+            <FavoritesProvider>
+              <ScheduleProvider>
+                <AppNavigator />
+              </ScheduleProvider>
+            </FavoritesProvider>
+          </PaddleQSessionProvider>
         </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

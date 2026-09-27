@@ -10,14 +10,18 @@ import {
 } from "../../../shared/types";
 
 // ── Axios instance ─────────────────────────────────────────────────────────────
-const client: AxiosInstance = axios.create({
-  baseURL: Config.API_BASE_URL,
-  timeout: Config.REQUEST_TIMEOUT,
-  headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-  },
-});
+export function createConfiguredApiClient(): AxiosInstance {
+  return axios.create({
+    baseURL: Config.API_BASE_URL,
+    timeout: Config.REQUEST_TIMEOUT,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  });
+}
+
+const client: AxiosInstance = createConfiguredApiClient();
 
 // ── Response interceptor — unwrap or throw ─────────────────────────────────────
 client.interceptors.response.use(

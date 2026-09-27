@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./dist",
+    "declaration": false,
+    "sourceMap": false
+  },
+  "include": [
+    "src/paddleQ/rotationEngine.ts",
+    "src/paddleQ/paddleQService.ts",
+    "src/paddleQ/types.ts",
+    "src/paddleQ/paddleQController.ts",
+    "src/routes/paddleSessions.ts",
+    "src/paddleQ/supabasePaddleQRepository.ts",
+    "tests/paddleQ/rotationEngine.test.ts",
+    "tests/paddleQ/paddleQService.test.ts",
+    "tests/paddleQ/paddleQApi.test.ts"
+  ],
+  "exclude": []
+}

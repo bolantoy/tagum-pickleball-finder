@@ -8,7 +8,8 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "lint": "eslint src --ext .ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "tsc -p tsconfig.test.json && node --test dist/tests/paddleQ/rotationEngine.test.js dist/tests/paddleQ/paddleQService.test.js dist/tests/paddleQ/paddleQApi.test.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.3",

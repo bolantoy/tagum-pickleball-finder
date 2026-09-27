@@ -2,11 +2,24 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import type { CompositeScreenProps } from "@react-navigation/native";
+import type { NavigatorScreenParams } from "@react-navigation/native";
+
+export type PaddleQStackParamList = {
+  SessionsHome: undefined;
+  CreateSession: undefined;
+  JoinSession: { sessionId?: string } | undefined;
+  SessionLobby: { sessionId: string };
+  Rotation: { sessionId: string };
+  Game: { sessionId: string; gameId: string };
+  GameHistory: { sessionId: string };
+  Statistics: { sessionId: string; playerId?: string };
+  OrganizerControls: { sessionId: string };
+};
 
 // ── Root Stack ─────────────────────────────────────────────────────────────────
 export type RootStackParamList = {
   Splash: undefined;
-  Main: undefined;
+  Main: NavigatorScreenParams<TabParamList> | undefined;
   CourtDetails: { courtId: string };
   Availability: { date: string; courtId?: string };
 };
@@ -15,6 +28,7 @@ export type RootStackParamList = {
 export type TabParamList = {
   Home: undefined;
   Planner: undefined;
+  PaddleQ: NavigatorScreenParams<PaddleQStackParamList> | undefined;
   Schedule: undefined;
   Settings: undefined;
 };

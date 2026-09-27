@@ -1,64 +1,16 @@
--- ─── Tagum Pickleball Finder — Supabase Schema ────────────────────────────────
--- Run this in your Supabase SQL editor to create the courts table.
--- Go to: https://supabase.com/dashboard → Your Project → SQL Editor
+﻿-- Paddle Q database installation for an existing Tagum Pickleball Finder database.
+-- Requires the existing courts table, uuid-ossp extension, and Supabase roles.
+-- This is a one-time installation; all created tables, functions, and triggers
+-- are Paddle Q-owned. No existing court objects or policies are altered.
 
--- ── Enable UUID generation ─────────────────────────────────────────────────
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+BEGIN;
 
--- ── Courts Table ───────────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS courts (
-  id          UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  name        TEXT NOT NULL,
-  address     TEXT NOT NULL,
-  latitude    DOUBLE PRECISION NOT NULL,
-  longitude   DOUBLE PRECISION NOT NULL,
-  website     TEXT,
-  phone       TEXT,
-  facebook    TEXT,
-  image       TEXT,
-  active      BOOLEAN NOT NULL DEFAULT true,
-  parser_name TEXT,    -- matches parsers/index.ts registry keys
-  created_at  TIMESTAMPTZ DEFAULT NOW(),
-  updated_at  TIMESTAMPTZ DEFAULT NOW()
-);
-
--- ── Index for active courts ────────────────────────────────────────────────
-CREATE INDEX IF NOT EXISTS idx_courts_active ON courts (active);
-CREATE INDEX IF NOT EXISTS idx_courts_parser_name ON courts (parser_name);
-
--- ── Auto-update updated_at ──────────────────────────────────────────────────
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.updated_at = NOW();
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER update_courts_updated_at
-  BEFORE UPDATE ON courts
-  FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
-
--- ── Row Level Security (optional but recommended) ──────────────────────────
--- Allow public read access (the mobile app reads courts without auth)
-ALTER TABLE courts ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Public courts are viewable by everyone"
-  ON courts FOR SELECT
-  USING (active = true);
-
--- Only service role (your backend) can insert/update/delete
-CREATE POLICY "Service role full access"
-  ON courts FOR ALL
-  USING (auth.role() = 'service_role');
-
--- ─── Paddle Q ────────────────────────────────────────────────────────────────
+-- â”€â”€â”€ Paddle Q â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 -- These tables extend the existing venue directory. They do not store or
 -- alter scraped booking availability. Apply this schema through the normal
 -- database setup process; this file is not executed by the application.
 
-CREATE TABLE IF NOT EXISTS paddle_sessions (
+CREATE TABLE paddle_sessions (
   id           UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   venue_id     UUID NOT NULL REFERENCES courts(id) ON DELETE RESTRICT,
   organizer_secret_hash TEXT NOT NULL CHECK (length(organizer_secret_hash) > 0),
@@ -78,7 +30,7 @@ CREATE INDEX IF NOT EXISTS idx_paddle_sessions_venue_date
 CREATE INDEX IF NOT EXISTS idx_paddle_sessions_status_date
   ON paddle_sessions (status, session_date DESC);
 
-CREATE TABLE IF NOT EXISTS paddle_session_players (
+CREATE TABLE paddle_session_players (
   id             UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   session_id     UUID NOT NULL REFERENCES paddle_sessions(id) ON DELETE CASCADE,
   display_name   TEXT NOT NULL CHECK (length(btrim(display_name)) > 0),
@@ -107,7 +59,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS uq_paddle_session_player_name
 CREATE INDEX IF NOT EXISTS idx_paddle_session_players_queue
   ON paddle_session_players (session_id, state, queue_position);
 
-CREATE TABLE IF NOT EXISTS paddle_games (
+CREATE TABLE paddle_games (
   id           UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   session_id   UUID NOT NULL REFERENCES paddle_sessions(id) ON DELETE CASCADE,
   game_number  INTEGER NOT NULL CHECK (game_number > 0),
@@ -135,7 +87,7 @@ CREATE TABLE IF NOT EXISTS paddle_games (
 CREATE INDEX IF NOT EXISTS idx_paddle_games_session_number
   ON paddle_games (session_id, game_number);
 
-CREATE TABLE IF NOT EXISTS paddle_game_players (
+CREATE TABLE paddle_game_players (
   id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   session_id        UUID NOT NULL,
   game_id           UUID NOT NULL,
@@ -156,7 +108,7 @@ CREATE INDEX IF NOT EXISTS idx_paddle_game_players_session_player
 -- A live or completed doubles game must have exactly two participants per
 -- team (four distinct participants total). Deferred validation allows the
 -- game and its four participant rows to be inserted in one transaction.
-CREATE OR REPLACE FUNCTION validate_paddle_game_roster()
+CREATE FUNCTION validate_paddle_game_roster()
 RETURNS TRIGGER AS $$
 DECLARE
   target_game_id UUID;
@@ -203,19 +155,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP TRIGGER IF EXISTS paddle_game_roster_valid_on_players ON paddle_game_players;
 CREATE CONSTRAINT TRIGGER paddle_game_roster_valid_on_players
   AFTER INSERT OR UPDATE OR DELETE ON paddle_game_players
   DEFERRABLE INITIALLY DEFERRED
   FOR EACH ROW EXECUTE FUNCTION validate_paddle_game_roster();
 
-DROP TRIGGER IF EXISTS paddle_game_roster_valid_on_games ON paddle_games;
 CREATE CONSTRAINT TRIGGER paddle_game_roster_valid_on_games
   AFTER INSERT OR UPDATE ON paddle_games
   DEFERRABLE INITIALLY DEFERRED
   FOR EACH ROW EXECUTE FUNCTION validate_paddle_game_roster();
 
-CREATE OR REPLACE FUNCTION update_paddle_updated_at_column()
+CREATE FUNCTION update_paddle_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
   NEW.updated_at = NOW();
@@ -223,12 +173,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP TRIGGER IF EXISTS update_paddle_sessions_updated_at ON paddle_sessions;
 CREATE TRIGGER update_paddle_sessions_updated_at
   BEFORE UPDATE ON paddle_sessions
   FOR EACH ROW EXECUTE FUNCTION update_paddle_updated_at_column();
 
-DROP TRIGGER IF EXISTS update_paddle_session_players_updated_at ON paddle_session_players;
 CREATE TRIGGER update_paddle_session_players_updated_at
   BEFORE UPDATE ON paddle_session_players
   FOR EACH ROW EXECUTE FUNCTION update_paddle_updated_at_column();
@@ -739,3 +687,5 @@ GRANT EXECUTE ON FUNCTION paddleq_skip_player(UUID, TEXT, UUID) TO service_role;
 GRANT EXECUTE ON FUNCTION paddleq_start_games(UUID, TEXT, JSONB) TO service_role;
 GRANT EXECUTE ON FUNCTION paddleq_complete_game(UUID, TEXT, UUID, INTEGER, INTEGER) TO service_role;
 GRANT EXECUTE ON FUNCTION paddleq_cancel_game(UUID, TEXT, UUID) TO service_role;
+
+COMMIT;
