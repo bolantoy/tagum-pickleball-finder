@@ -378,6 +378,26 @@ export default function PaddleQSessionLobbyScreen({ navigation, route }: Props) 
               {organizerAccess ? <InfoPill icon="shield-checkmark-outline" label="Organizer capability saved on this device" /> : null}
               {ownWaitingPlayer ? <InfoPill icon="person-circle-outline" label={`You are ${ownWaitingPlayer.displayName}`} /> : playerId && ownGameIds.size > 0 ? <InfoPill icon="person-circle-outline" label="Your game is in progress" /> : null}
             </View>
+            <View style={[styles.sessionIdRow, { backgroundColor: c.background, borderColor: c.border }]}>
+              <View style={styles.sessionIdCopy}>
+                <Text style={[styles.sessionIdLabel, { color: c.textSecondary }]}>
+                  Session ID
+                </Text>
+
+                <Text
+                  style={[styles.sessionIdValue, { color: c.text }]}
+                  selectable
+                >
+                  {sessionId}
+                </Text>
+              </View>
+
+              <Ionicons
+                name="copy-outline"
+                size={18}
+                color={Colors.brand.primary}
+              />
+            </View>
             {snapshot.session.status === "completed" ? <SessionNotice text="This session has ended. The lobby is read-only." icon="checkmark-circle-outline" /> : null}
             {snapshot.session.status === "cancelled" ? <SessionNotice text="This session was cancelled. The lobby is read-only." icon="close-circle-outline" /> : null}
             {snapshot.session.status === "scheduled" ? <SessionNotice text="This session is scheduled. Current games will appear here when play begins." icon="time-outline" /> : null}
@@ -637,6 +657,10 @@ const styles = StyleSheet.create({
   content: { padding: Spacing.md, paddingBottom: Spacing.xl },
   refreshError: { marginHorizontal: 0, marginTop: 0 },
   sessionCard: { borderWidth: 1, borderRadius: Radius.lg, padding: Spacing.md },
+  sessionIdRow: { marginTop: Spacing.md, borderWidth: 1, borderRadius: Radius.md, padding: Spacing.sm, flexDirection: "row", alignItems: "center", gap: Spacing.sm, },
+ sessionIdCopy: { flex: 1, gap: Spacing.xs, },
+  sessionIdLabel: { fontSize: Typography.caption, fontWeight: FontWeight.semibold,},
+  sessionIdValue: { fontSize: Typography.bodySmall, fontFamily: "monospace", },
   sessionHeading: { flexDirection: "row", alignItems: "center", gap: Spacing.md },
   venueIcon: { width: 42, height: 42, borderRadius: Radius.md, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(34,197,94,0.12)" },
   sessionHeadingCopy: { flex: 1, gap: Spacing.xs },

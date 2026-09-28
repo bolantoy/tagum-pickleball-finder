@@ -5,6 +5,12 @@ export default {
     name: "Tagum Pickleball Finder",
     slug: "tagum-pickleball-finder",
     version: "1.0.0",
+    runtimeVersion: {
+      policy: "appVersion",
+    },
+    updates: {
+      url: "https://u.expo.dev/46962857-7979-4fdd-8c4d-3c2ba77e8de0",
+    },
     orientation: "portrait",
     icon: "./assets/icon.png",
     userInterfaceStyle: "automatic",
