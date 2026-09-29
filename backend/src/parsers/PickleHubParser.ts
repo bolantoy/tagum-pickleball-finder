@@ -214,6 +214,21 @@ export class PickleHubParser implements IParser {
                 );
               });
 
+              const categoryName =
+                categories
+                  .find((category) => category.id === court.category_id)
+                  ?.name.toLowerCase() ?? "";
+
+              const sourceCourtType = court.court_type.toLowerCase();
+
+              const courtType = categoryName.includes("indoor")
+                ? "indoor"
+                : categoryName.includes("outdoor")
+                ? "outdoor"
+                : sourceCourtType === "indoor" || sourceCourtType === "outdoor"
+                ? sourceCourtType
+                : undefined;
+
               slots.push({
                 courtId: court.id,
                 court: `Court ${court.court_number}`,
@@ -222,18 +237,7 @@ export class PickleHubParser implements IParser {
                 available,
                 status: available ? "available" : "booked",
                 price: `₱${availability.price_per_hour}`,
-                courtType:
-                  categories
-                    .find((category) => category.id === court.category_id)
-                    ?.name.toLowerCase()
-                    .includes("indoor")
-                    ? "indoor"
-                    : categories
-                        .find((category) => category.id === court.category_id)
-                        ?.name.toLowerCase()
-                        .includes("outdoor")
-                    ? "outdoor"
-                    : undefined,
+                courtType,
               });
             }
 
