@@ -365,7 +365,9 @@ export default function HomeScreen() {
                       style={[
                         styles.availabilityBadge,
                         {
-                          backgroundColor: availableCourtIds.has(court.id)
+                          backgroundColor: !court.website
+                            ? `${c.textMuted}10`
+                            : availableCourtIds.has(court.id)
                             ? `${Colors.available}15`
                             : `${Colors.unavailable}10`,
                         },
@@ -375,10 +377,11 @@ export default function HomeScreen() {
                         style={[
                           styles.availabilityDot,
                           {
-                            backgroundColor:
-                              availableCourtIds.has(court.id)
-                                ? Colors.available
-                                : Colors.unavailable,
+                            backgroundColor: !court.website
+                              ? c.textMuted
+                              : availableCourtIds.has(court.id)
+                              ? Colors.available
+                              : Colors.unavailable,
                           },
                         ]}
                       />
@@ -387,13 +390,17 @@ export default function HomeScreen() {
                         style={[
                           styles.availabilityText,
                           {
-                            color: availableCourtIds.has(court.id)
+                            color: !court.website
+                              ? c.textMuted
+                              : availableCourtIds.has(court.id)
                               ? Colors.available
                               : Colors.unavailable,
                           },
                         ]}
                       >
-                        {availableCourtIds.has(court.id)
+                        {!court.website
+                          ? "Booking page not available yet"
+                          : availableCourtIds.has(court.id)
                           ? availabilityDate === today
                             ? "Available today"
                             : `Available ${formatShortDate(availabilityDate)}`

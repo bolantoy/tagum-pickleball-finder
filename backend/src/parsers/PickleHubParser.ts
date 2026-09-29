@@ -222,6 +222,12 @@ export class PickleHubParser implements IParser {
                 available,
                 status: available ? "available" : "booked",
                 price: `₱${availability.price_per_hour}`,
+                courtType:
+                  court.court_type.toLowerCase() === "indoor"
+                    ? "indoor"
+                    : court.court_type.toLowerCase() === "outdoor"
+                    ? "outdoor"
+                    : undefined,
               });
             }
 

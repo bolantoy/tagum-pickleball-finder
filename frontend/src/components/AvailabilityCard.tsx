@@ -167,6 +167,8 @@ interface GroupedTimeSlot {
   available: boolean;
   availableCount: number;
   totalCount: number;
+  indoorAvailableCount: number;
+  outdoorAvailableCount: number;
 }
 
 function groupSlotsByTime(slots: TimeSlot[]): GroupedTimeSlot[] {
@@ -175,6 +177,8 @@ function groupSlotsByTime(slots: TimeSlot[]): GroupedTimeSlot[] {
     {
       availableCourts: Set<string>;
       totalCourts: Set<string>;
+      indoorCourts: Set<string>;
+      outdoorCourts: Set<string>;
     }
   >();
 
@@ -185,13 +189,13 @@ function groupSlotsByTime(slots: TimeSlot[]): GroupedTimeSlot[] {
       grouped.set(time, {
         availableCourts: new Set<string>(),
         totalCourts: new Set<string>(),
+        indoorCourts: new Set<string>(),
+        outdoorCourts: new Set<string>(),
       });
     }
 
     const group = grouped.get(time)!;
 
-    // Count each physical court only once for this time.
-    // Use courtId because that is the actual unique court identifier.
     const courtId = slot.courtId;
 
     if (!courtId) {
@@ -202,6 +206,12 @@ function groupSlotsByTime(slots: TimeSlot[]): GroupedTimeSlot[] {
 
     if (slot.available) {
       group.availableCourts.add(courtId);
+
+      if (slot.courtType === "indoor") {
+        group.indoorCourts.add(courtId);
+      } else if (slot.courtType === "outdoor") {
+        group.outdoorCourts.add(courtId);
+      }
     }
   }
 
@@ -210,6 +220,8 @@ function groupSlotsByTime(slots: TimeSlot[]): GroupedTimeSlot[] {
     available: group.availableCourts.size > 0,
     availableCount: group.availableCourts.size,
     totalCount: group.totalCourts.size,
+    indoorAvailableCount: group.indoorCourts.size,
+    outdoorAvailableCount: group.outdoorCourts.size,
   }));
 }
 
@@ -224,11 +236,29 @@ function SlotChip({ slot }: { slot: GroupedTimeSlot }) {
     ? Colors.available
     : Colors.unavailable;
 
+  const hasCourtTypeInfo =
+    slot.indoorAvailableCount > 0 || slot.outdoorAvailableCount > 0;
+
   return (
     <View style={[styles.chip, { backgroundColor: bg }]}>
       <Text style={[styles.chipText, { color }]} numberOfLines={1}>
         {slot.time} - {slot.availableCount} of {slot.totalCount} courts
       </Text>
+
+      {hasCourtTypeInfo && (
+        <Text
+          style={[styles.courtTypeText, { color: theme.colors.textMuted }]}
+          numberOfLines={1}
+        >
+          {slot.indoorAvailableCount > 0 &&
+            `Indoor: ${slot.indoorAvailableCount}`}
+          {slot.indoorAvailableCount > 0 &&
+            slot.outdoorAvailableCount > 0 &&
+            " · "}
+          {slot.outdoorAvailableCount > 0 &&
+            `Outdoor: ${slot.outdoorAvailableCount}`}
+        </Text>
+      )}
     </View>
   );
 }
@@ -291,6 +321,11 @@ const styles = StyleSheet.create({
   chipText: {
     fontSize: 11,
     fontWeight: "600",
+  },
+  courtTypeText: {
+    fontSize: 10,
+    fontWeight: "600",
+    marginTop: 2,
   },
   moreChip: {
     paddingHorizontal: 10,

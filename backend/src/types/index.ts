@@ -49,6 +49,7 @@ export interface ParsedSlot {
   available: boolean;
   status: "available" | "booked" | "openplay" | "awaiting";
   price: string | null;
+  courtType?: "indoor" | "outdoor";
 }
 
 export interface TimeSlot extends ParsedSlot {

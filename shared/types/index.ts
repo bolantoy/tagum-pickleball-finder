@@ -26,6 +26,9 @@ export interface TimeSlot {
   // Example: Court 1, Court 2, etc.
   courtId?: string;
   courtName?: string;
+
+  // Physical court type when provided by the booking source.
+  courtType?: "indoor" | "outdoor";
 }
 
 export interface CourtAvailability {
