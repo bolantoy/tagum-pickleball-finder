@@ -38,6 +38,7 @@ import { PaddleArenaParser } from "./PaddleArenaParser";
 import { SportsCaveParser } from "./SportsCaveParser";
 import { SmashZoneParser } from "./SmashZoneParser";
 import { PaddlePointGMallParser } from "./PaddlePointGMallParser";
+import { PickleVParser } from "./PickleVParser";
 
 /**
  * Registry maps parser_name → parser instance.
@@ -76,6 +77,7 @@ const PARSER_REGISTRY: Record<string, IParser> = {
   sports_cave: new SportsCaveParser(),
   smash_zone: new SmashZoneParser(),
   paddle_point_gmall: new PaddlePointGMallParser(),
+  picklev: new PickleVParser(),
 };
 
 /**
