@@ -1,0 +1,1767 @@
+{
+  "generatedAt": "2026-10-03T03:45:24.050Z",
+  "source": "PickleHub authenticated browser API",
+  "cityFilter": "Tagum",
+  "totalClubsReturned": 252,
+  "tagumCandidates": 38,
+  "venues": [
+    {
+      "name": "City Pickle Grounds",
+      "slug": "city-pickle-grounds",
+      "parserName": "city_pickle_grounds",
+      "clubId": "73fa026c-6a6a-4894-a5a5-260f9a115043",
+      "status": "active",
+      "address": "JV Ayala Avenue Prk 1B",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.44228332,
+      "longitude": 125.8261351,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/73fa026c-6a6a-4894-a5a5-260f9a115043/gallery/1776425482912-vl8v3v.jpg",
+      "googleMapsAddress": "https://www.google.com/maps/place/City+Pickle+Grounds/@7.4422614,125.8236397,17z/data=!3m1!4b1!4m6!3m5!1s0x32f9530051872c5f:0x9455ef28c227b31e!8m2!3d7.4422561!4d125.8262146!16s%2Fg%2F11zjlxxrsx?entry=ttu&g_ep=EgoyMDI2MDQwMS4wIKXMDSoASAFQAw%3D%3D",
+      "totalCourts": 6,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "342f736b-9e94-4a3d-a900-724e813cb787"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "4bb97b20-ad40-40ae-8b58-e110624bb4aa"
+        },
+        {
+          "number": 3,
+          "type": "indoor",
+          "id": "e9e06633-0471-4af3-bbd4-37b9fdd8947d"
+        },
+        {
+          "number": 4,
+          "type": "indoor",
+          "id": "c171ebdb-50a4-4a06-b493-74db8c478f8b"
+        },
+        {
+          "number": 5,
+          "type": "indoor",
+          "id": "de55c164-1de2-48f6-b9c5-c900d1b01bee"
+        },
+        {
+          "number": 6,
+          "type": "indoor",
+          "id": "0d924237-a715-4b29-91c2-1669c31c8f35"
+        }
+      ],
+      "minPrice": 250,
+      "maxPrice": 350,
+      "operatingHoursStart": "00:00:00",
+      "operatingHoursEnd": "17:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/city-pickle-grounds",
+      "warnings": []
+    },
+    {
+      "name": "Paddle Point Mabini Tagum",
+      "slug": "paddle-point-tagum",
+      "parserName": "paddle_point_tagum",
+      "clubId": "32dd4aff-eb4b-4a87-9d76-725f6540854b",
+      "status": "active",
+      "address": "Door 6 Limcore Warehouse Mabini St.",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.44587609,
+      "longitude": 125.79248357,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/32dd4aff-eb4b-4a87-9d76-725f6540854b/gallery/1771313895866-m25av.jpg",
+      "googleMapsAddress": null,
+      "totalCourts": 5,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "b6ed7c2f-1b75-424f-926f-fe6a5d81d76d"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "7906e771-3127-4a43-a108-d4df759ccd2d"
+        },
+        {
+          "number": 3,
+          "type": "indoor",
+          "id": "93d5aa27-58a2-40ec-b299-6c3d4f2e6f82"
+        },
+        {
+          "number": 4,
+          "type": "indoor",
+          "id": "8df0d798-6230-4174-ae40-991bdaa103ee"
+        },
+        {
+          "number": 5,
+          "type": "indoor",
+          "id": "b00c589f-b4f3-4531-9719-b60f4f3d62c4"
+        }
+      ],
+      "minPrice": 250,
+      "maxPrice": 350,
+      "operatingHoursStart": "08:00:00",
+      "operatingHoursEnd": "17:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/paddle-point-tagum",
+      "warnings": []
+    },
+    {
+      "name": "The Rally Point",
+      "slug": "the-rally-point",
+      "parserName": "the_rally_point",
+      "clubId": "9fd8e365-88c6-4be0-815d-a11dd76b8a52",
+      "status": "active",
+      "address": "FQ5M+9Q",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.45864604,
+      "longitude": 125.7845602,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/9fd8e365-88c6-4be0-815d-a11dd76b8a52/gallery/1772981688329-evwls.jpg",
+      "googleMapsAddress": null,
+      "totalCourts": 4,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "9e2f9226-3f72-495a-9a0d-74d3402ab07e"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "faef5af6-5b92-4407-91f9-df0198225969"
+        },
+        {
+          "number": 3,
+          "type": "indoor",
+          "id": "753547ce-363d-49d4-8706-ebf9c09f200c"
+        },
+        {
+          "number": 4,
+          "type": "indoor",
+          "id": "7d0874ad-1f55-4af0-8712-ffe127985fa2"
+        }
+      ],
+      "minPrice": 200,
+      "maxPrice": 250,
+      "operatingHoursStart": "16:00:00",
+      "operatingHoursEnd": "23:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/the-rally-point",
+      "warnings": []
+    },
+    {
+      "name": "M Central Pickleball Club",
+      "slug": "m-central-pickleball-club",
+      "parserName": "m_central_pickleball_club",
+      "clubId": "ee273ba1-b519-499a-a056-f98d18597197",
+      "status": "active",
+      "address": "M Central, Dalisay Gante Road, Tagum City, Philippines, 8100",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.46015032,
+      "longitude": 125.80240057,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/ee273ba1-b519-499a-a056-f98d18597197/gallery/1772851942647-0egqr.jpg",
+      "googleMapsAddress": null,
+      "totalCourts": 4,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "d063665f-edc2-4990-b89d-adb42986a887"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "c67a01ee-f629-4bba-bc6a-f862a05ffec4"
+        },
+        {
+          "number": 3,
+          "type": "indoor",
+          "id": "efc486ac-6a95-4708-94f1-650cf2923910"
+        },
+        {
+          "number": 4,
+          "type": "indoor",
+          "id": "877a2d65-3c3a-4e46-9d10-0f06eab91f03"
+        }
+      ],
+      "minPrice": 208,
+      "maxPrice": 300,
+      "operatingHoursStart": "08:00:00",
+      "operatingHoursEnd": "17:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/m-central-pickleball-club",
+      "warnings": []
+    },
+    {
+      "name": "Picklezone Tagum",
+      "slug": "picklezone-tagum",
+      "parserName": "picklezone_tagum",
+      "clubId": "98d5fd7d-cd74-4d85-a4d8-74a5c7c527e1",
+      "status": "active",
+      "address": "PickleZone, Purok Dela Cruz, Brgy. Mankilam, Tagum City",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.45833331,
+      "longitude": 125.79307415,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/98d5fd7d-cd74-4d85-a4d8-74a5c7c527e1/gallery/1770329380401-0psjen.jpg",
+      "googleMapsAddress": null,
+      "totalCourts": 5,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "3117730e-886c-4a8e-b0e9-8f80195c7168"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "736a9c4b-165b-4241-b9a2-95072027a637"
+        },
+        {
+          "number": 3,
+          "type": "indoor",
+          "id": "4f59722a-8d67-4128-ac7f-3832ec0ae947"
+        },
+        {
+          "number": 4,
+          "type": "indoor",
+          "id": "166e42e6-1f42-4581-b02d-3958f36a11e0"
+        },
+        {
+          "number": 5,
+          "type": "indoor",
+          "id": "40c5caab-3342-4860-859f-24c3216caaae"
+        }
+      ],
+      "minPrice": 250,
+      "maxPrice": 300,
+      "operatingHoursStart": "08:00:00",
+      "operatingHoursEnd": "02:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/picklezone-tagum",
+      "warnings": []
+    },
+    {
+      "name": "PMAX",
+      "slug": "pmax",
+      "parserName": "pmax",
+      "clubId": "364fb7d0-ff55-4de1-b815-86883cbaab68",
+      "status": "active",
+      "address": "Tan building, Gazmen Road, Purok Bayanihan Magugpo West, Tagum City, Philippines",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.46397483,
+      "longitude": 125.80147911,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/364fb7d0-ff55-4de1-b815-86883cbaab68/gallery/1782128848965-4yl31.jpg",
+      "googleMapsAddress": "Tan building Rosabaya distributor",
+      "totalCourts": 6,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "e62d3d93-e91d-4e54-b64c-b7874b851e4a"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "9ec86557-080b-4d34-a04f-0b7a1363021d"
+        },
+        {
+          "number": 3,
+          "type": "indoor",
+          "id": "9f5acf52-7259-483b-aab1-aab5e93d1ced"
+        },
+        {
+          "number": 4,
+          "type": "indoor",
+          "id": "ce3380dc-56d4-4950-bd42-0d035f62a108"
+        },
+        {
+          "number": 5,
+          "type": "indoor",
+          "id": "19afd31e-1e21-456a-8c64-776159697777"
+        },
+        {
+          "number": 6,
+          "type": "indoor",
+          "id": "71d4e912-0701-4623-9ecc-71426c7054e9"
+        }
+      ],
+      "minPrice": 250,
+      "maxPrice": 300,
+      "operatingHoursStart": "06:00:00",
+      "operatingHoursEnd": "15:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/pmax",
+      "warnings": []
+    },
+    {
+      "name": "929 PICKLEYARD",
+      "slug": "929-pickleyard",
+      "parserName": "929_pickleyard",
+      "clubId": "7490ea36-c469-4449-b1e7-9040947d4d08",
+      "status": "active",
+      "address": "Purok 3A Dagohoy,  Brgy. Canocotan",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.42217479,
+      "longitude": 125.77498521,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/7490ea36-c469-4449-b1e7-9040947d4d08/gallery/1789709667681-dowvj.jpg",
+      "googleMapsAddress": "Purok3ACanocotan",
+      "totalCourts": 5,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "e93f142c-7d8e-4bb5-84d1-20d6fb993002"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "239093fe-f290-499f-8b0e-63270a70ec9e"
+        },
+        {
+          "number": 3,
+          "type": "indoor",
+          "id": "ff469e54-a805-4ffa-b3c0-b11eaedbcc73"
+        },
+        {
+          "number": 4,
+          "type": "indoor",
+          "id": "38c1ec45-c1a5-4803-9e13-5e4f68107db9"
+        },
+        {
+          "number": 5,
+          "type": "indoor",
+          "id": "117c47e3-f1b9-4170-aaee-0b01a5add7d8"
+        }
+      ],
+      "minPrice": 100,
+      "maxPrice": 300,
+      "operatingHoursStart": "06:00:00",
+      "operatingHoursEnd": "17:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/929-pickleyard",
+      "warnings": []
+    },
+    {
+      "name": "AP Grounds",
+      "slug": "ap-grounds",
+      "parserName": "ap_grounds",
+      "clubId": "5d48e9f8-8c6c-42e6-8dc7-3024d70b3de2",
+      "status": "active",
+      "address": "Harbco Purok 4, Gumamela Drive, Apokon",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.42244661,
+      "longitude": 125.82459545,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/5d48e9f8-8c6c-42e6-8dc7-3024d70b3de2/gallery/1789480788864-97pydp.jpg",
+      "googleMapsAddress": null,
+      "totalCourts": 2,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "630d977f-2167-4388-9c2a-0986a6f77a62"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "36ac3b07-e2d2-4620-b8aa-09ffb39a82fe"
+        }
+      ],
+      "minPrice": 250,
+      "maxPrice": 300,
+      "operatingHoursStart": "06:00:00",
+      "operatingHoursEnd": "22:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/ap-grounds",
+      "warnings": []
+    },
+    {
+      "name": "Big J paddle grounds Apokon",
+      "slug": "big-j-paddle-grounds-apokon",
+      "parserName": "big_j_paddle_grounds_apokon",
+      "clubId": "29a25322-e37f-4bd8-a8b8-03ecc6222e57",
+      "status": "active",
+      "address": "Sj building, Apokon road, Tagum City",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.4433847,
+      "longitude": 125.81778514,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/29a25322-e37f-4bd8-a8b8-03ecc6222e57/gallery/1780472481485-e4lfid.jpg",
+      "googleMapsAddress": null,
+      "totalCourts": 2,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "87de5dbb-b8ec-476c-abd1-3cae1132328e"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "114c4773-25b1-4193-8691-2234a79ef13e"
+        }
+      ],
+      "minPrice": 300,
+      "maxPrice": 300,
+      "operatingHoursStart": "06:00:00",
+      "operatingHoursEnd": "22:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/big-j-paddle-grounds-apokon",
+      "warnings": []
+    },
+    {
+      "name": "Big J paddlegrounds Mankilam",
+      "slug": "big-j-paddlegrounds-mankilam",
+      "parserName": "big_j_paddlegrounds_mankilam",
+      "clubId": "a5f9108f-7185-404b-b988-26a3dc2dda5a",
+      "status": "active",
+      "address": "Big J paddle grounds-Mankilam, BN space rental bldg, Prk Caimito, Mankilam, Tagum City.",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.46553716,
+      "longitude": 125.79546363,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/a5f9108f-7185-404b-b988-26a3dc2dda5a/avatar_1783325955190.png",
+      "googleMapsAddress": null,
+      "totalCourts": 8,
+      "courtType": "outdoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "outdoor",
+          "id": "d0c45032-c9b5-499e-b48f-efc35d239a68"
+        },
+        {
+          "number": 2,
+          "type": "outdoor",
+          "id": "deb887d5-f618-4001-993c-deddf5324daa"
+        },
+        {
+          "number": 3,
+          "type": "outdoor",
+          "id": "23c671b6-b6cb-4fb5-842a-bec80bf05536"
+        },
+        {
+          "number": 4,
+          "type": "outdoor",
+          "id": "a233b258-15a6-4f72-b631-3dff4fe88eb3"
+        },
+        {
+          "number": 5,
+          "type": "outdoor",
+          "id": "13b3c4ed-bc4b-4eca-a855-7e34bf57f12b"
+        },
+        {
+          "number": 6,
+          "type": "outdoor",
+          "id": "bf16e34d-5578-4fa8-a17b-30318ee74fcb"
+        },
+        {
+          "number": 7,
+          "type": "outdoor",
+          "id": "92abd191-ad10-4f93-87a9-8ddd6c87637e"
+        },
+        {
+          "number": 8,
+          "type": "outdoor",
+          "id": "fdede31b-976c-4130-8514-7bdd1e80b6f7"
+        }
+      ],
+      "minPrice": 300,
+      "maxPrice": 500,
+      "operatingHoursStart": "06:00:00",
+      "operatingHoursEnd": "02:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/big-j-paddlegrounds-mankilam",
+      "warnings": []
+    },
+    {
+      "name": "Dink Avenue",
+      "slug": "dink-avenue",
+      "parserName": "dink_avenue",
+      "clubId": "1803dd36-3c93-4a91-8ae4-44a294f80a9b",
+      "status": "active",
+      "address": "Purok Bayabas, Baysa, Brgy. Visayan Village",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.44417168,
+      "longitude": 125.80955926,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/1803dd36-3c93-4a91-8ae4-44a294f80a9b/gallery/1788005267368-j8pguo.jpg",
+      "googleMapsAddress": null,
+      "totalCourts": 2,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "489ed440-8a46-48d6-a1e2-030771294328"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "e988f09a-ce6c-41c3-9ec3-cac93c478392"
+        }
+      ],
+      "minPrice": 250,
+      "maxPrice": 300,
+      "operatingHoursStart": "08:00:00",
+      "operatingHoursEnd": "16:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/dink-avenue",
+      "warnings": []
+    },
+    {
+      "name": "Hideaway Pickleball Hub",
+      "slug": "hideaway-pickleball-hub",
+      "parserName": "hideaway_pickleball_hub",
+      "clubId": "7fcc928b-3347-4d97-bc98-f3d2431efc45",
+      "status": "active",
+      "address": "Purok Talisay II, Visayan Village, Tagum City",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.43061876,
+      "longitude": 125.80223857,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/7fcc928b-3347-4d97-bc98-f3d2431efc45/gallery/1778146811294-yh1e89.jpg",
+      "googleMapsAddress": "https://www.google.com/maps/place/Hideaway+Pickleball+Hub/@7.4303582,125.7997304,1125m/data=!3m2!1e3!4b1!4m6!3m5!1s0x32f953bcb34c57b3:0x925dd095d10561ed!8m2!3d7.4303529!4d125.8023053!16s%2Fg%2F11z73w8xgt!18m1!1e1?entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D",
+      "totalCourts": 2,
+      "courtType": "outdoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "outdoor",
+          "id": "326f733b-0fdf-4f2c-9670-b1345dcf0f27"
+        },
+        {
+          "number": 2,
+          "type": "outdoor",
+          "id": "9faa2795-f18b-48b0-b99c-7f6725d5f8e7"
+        }
+      ],
+      "minPrice": 200,
+      "maxPrice": 250,
+      "operatingHoursStart": "07:00:00",
+      "operatingHoursEnd": "17:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/hideaway-pickleball-hub",
+      "warnings": []
+    },
+    {
+      "name": "NICO-SHANN PICKLEBALL HUB",
+      "slug": "",
+      "parserName": "",
+      "clubId": "a0cd5454-9c67-49fc-9a12-59b2540c279e",
+      "status": "review",
+      "address": "Durian Street Purok 10, Lopez Vilage, Tagum City",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.4518391,
+      "longitude": 125.7810725,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/a0cd5454-9c67-49fc-9a12-59b2540c279e/gallery/1789304126695-hsj9ks.jpg",
+      "googleMapsAddress": "https://maps.app.goo.gl/SqHX3EidYEwKfYvJA?g_st=ac",
+      "totalCourts": 1,
+      "courtType": "indoor",
+      "physicalCourts": [],
+      "minPrice": 210,
+      "maxPrice": 260,
+      "operatingHoursStart": "05:00:00",
+      "operatingHoursEnd": "23:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/book",
+      "warnings": [
+        "Missing PickleHub slug",
+        "Bootstrap data unavailable"
+      ]
+    },
+    {
+      "name": "Paddle Arena",
+      "slug": "paddle-arena",
+      "parserName": "paddle_arena",
+      "clubId": "9050c25a-997a-43dc-a029-de325bc2153d",
+      "status": "active",
+      "address": "Purok Cogon, Visayan Village",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.42874161,
+      "longitude": 125.78606252,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/9050c25a-997a-43dc-a029-de325bc2153d/gallery/1789382596330-p9r18.jpg",
+      "googleMapsAddress": null,
+      "totalCourts": 4,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "07d85031-5425-4899-98d4-c1b02ca78750"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "ca45700a-65d6-4f63-96c0-55a79a8731e6"
+        },
+        {
+          "number": 3,
+          "type": "indoor",
+          "id": "8d6fbe6e-8f81-4bd5-9d46-5a6fd67fb881"
+        },
+        {
+          "number": 4,
+          "type": "indoor",
+          "id": "92a4d6ff-7789-4b6c-8bed-780292d46b15"
+        }
+      ],
+      "minPrice": 300,
+      "maxPrice": 350,
+      "operatingHoursStart": "06:00:00",
+      "operatingHoursEnd": "15:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/paddle-arena",
+      "warnings": []
+    },
+    {
+      "name": "Paddle Hideout",
+      "slug": "",
+      "parserName": "",
+      "clubId": "94286d2b-ea80-4b62-8a36-924ec8f3d22f",
+      "status": "review",
+      "address": "Tipaz, Magugpo East, Near Atiman Center",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.44697534,
+      "longitude": 125.82773421,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/94286d2b-ea80-4b62-8a36-924ec8f3d22f/gallery/1790569242038-24sqeo.jpg",
+      "googleMapsAddress": null,
+      "totalCourts": 2,
+      "courtType": "indoor",
+      "physicalCourts": [],
+      "minPrice": 200,
+      "maxPrice": 300,
+      "operatingHoursStart": "08:00:00",
+      "operatingHoursEnd": "15:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/book",
+      "warnings": [
+        "Missing PickleHub slug",
+        "Bootstrap data unavailable"
+      ]
+    },
+    {
+      "name": "Paddle Hour",
+      "slug": "paddle-hour",
+      "parserName": "paddle_hour",
+      "clubId": "cb812a98-0564-4213-8027-63733f0a289f",
+      "status": "active",
+      "address": "Along Daang Maharlika Highway behind TireSmart",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.417571,
+      "longitude": 125.818647,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/cb812a98-0564-4213-8027-63733f0a289f/gallery/1783331655782-lz6xbj.jpg",
+      "googleMapsAddress": "https://share.google/DJh2YRk1XUo17D20S",
+      "totalCourts": 6,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "c16d9bdb-db28-4090-8459-1ad76ff55fb3"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "2115c484-482f-4bb5-8fe4-5e5eb4c5cedc"
+        },
+        {
+          "number": 3,
+          "type": "indoor",
+          "id": "43e3a679-c5e3-4ff6-b37c-60e201bf6878"
+        },
+        {
+          "number": 4,
+          "type": "indoor",
+          "id": "62e9ba13-bc3b-4fff-a486-77c4eac44695"
+        },
+        {
+          "number": 5,
+          "type": "indoor",
+          "id": "820393f6-9776-46fb-aefd-3607eb3ad4cd"
+        },
+        {
+          "number": 6,
+          "type": "indoor",
+          "id": "cfafa442-ad5b-42ca-aaea-4994a7aca058"
+        }
+      ],
+      "minPrice": 250,
+      "maxPrice": 350,
+      "operatingHoursStart": "06:00:00",
+      "operatingHoursEnd": "17:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/paddle-hour",
+      "warnings": []
+    },
+    {
+      "name": "Paddle Point GMALL TAGUM",
+      "slug": "paddle-point-gmall-tagum",
+      "parserName": "paddle_point_gmall_tagum",
+      "clubId": "fca83964-3ccf-4e88-8fdb-160d9aa7af07",
+      "status": "active",
+      "address": "National Highway Briz Dist. Magugpo East",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.4492929,
+      "longitude": 125.8119786,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/fca83964-3ccf-4e88-8fdb-160d9aa7af07/avatar_1788789116722.png",
+      "googleMapsAddress": null,
+      "totalCourts": 3,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "70da871a-168b-4aa9-8410-0e2d6cf976fa"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "8c8aa4b8-a7a4-48ea-91cf-ca9dfc17007c"
+        },
+        {
+          "number": 3,
+          "type": "indoor",
+          "id": "c256ca65-d1ab-42a2-a2ed-b3e7ccdb0b3e"
+        }
+      ],
+      "minPrice": 350,
+      "maxPrice": 400,
+      "operatingHoursStart": "10:00:00",
+      "operatingHoursEnd": "23:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/paddle-point-gmall-tagum",
+      "warnings": []
+    },
+    {
+      "name": "Pickle House",
+      "slug": "",
+      "parserName": "",
+      "clubId": "2d56dcf3-4516-4322-882d-89f978b73651",
+      "status": "review",
+      "address": "Purok 2 A Apokon",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.43483988,
+      "longitude": 125.81940407,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/2d56dcf3-4516-4322-882d-89f978b73651/gallery/1788232159737-nknac4.jpg",
+      "googleMapsAddress": null,
+      "totalCourts": 1,
+      "courtType": "indoor",
+      "physicalCourts": [],
+      "minPrice": 200,
+      "maxPrice": 350,
+      "operatingHoursStart": "08:00:00",
+      "operatingHoursEnd": "23:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/book",
+      "warnings": [
+        "Missing PickleHub slug",
+        "Bootstrap data unavailable"
+      ]
+    },
+    {
+      "name": "Pickle Village",
+      "slug": "pickle-village",
+      "parserName": "pickle_village",
+      "clubId": "febc0ef6-cf9d-4913-8646-c9cfe3bf043b",
+      "status": "active",
+      "address": "Purok Bunga, Visayan Village",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.4323849,
+      "longitude": 125.78859816,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/febc0ef6-cf9d-4913-8646-c9cfe3bf043b/gallery/1790361723462-d3mwov.jpg",
+      "googleMapsAddress": null,
+      "totalCourts": 6,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "c247dc64-183d-4a6f-a39a-e9e5a398ef84"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "94b962f9-b1f2-4ba9-a674-9b25b7fc6256"
+        },
+        {
+          "number": 3,
+          "type": "indoor",
+          "id": "666593d2-5b6a-45fe-9e14-5e64a14d2a70"
+        },
+        {
+          "number": 4,
+          "type": "indoor",
+          "id": "6263f150-b2e9-45a4-987b-ffcb17d9c89b"
+        },
+        {
+          "number": 5,
+          "type": "indoor",
+          "id": "b7c99b90-280d-492a-9150-f2df0d959d32"
+        },
+        {
+          "number": 6,
+          "type": "indoor",
+          "id": "fe92861f-3f53-4744-9e73-7c84d511dc06"
+        }
+      ],
+      "minPrice": 250,
+      "maxPrice": 350,
+      "operatingHoursStart": "07:00:00",
+      "operatingHoursEnd": "23:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/pickle-village",
+      "warnings": []
+    },
+    {
+      "name": "Pikol sa Paayo",
+      "slug": "",
+      "parserName": "",
+      "clubId": "789792f7-74e5-4f8f-bc33-01211e5811b5",
+      "status": "review",
+      "address": "Prk. Lanzones, National Highway, Brgy. Visayan Village",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.42315865,
+      "longitude": 125.79048968,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/789792f7-74e5-4f8f-bc33-01211e5811b5/gallery/1788851246668-crdngd.jpg",
+      "googleMapsAddress": null,
+      "totalCourts": 2,
+      "courtType": "outdoor",
+      "physicalCourts": [],
+      "minPrice": 200,
+      "maxPrice": 250,
+      "operatingHoursStart": "05:00:00",
+      "operatingHoursEnd": "17:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/book",
+      "warnings": [
+        "Missing PickleHub slug",
+        "Bootstrap data unavailable"
+      ]
+    },
+    {
+      "name": "Play 77 Sports Court",
+      "slug": "play-77-sports-court",
+      "parserName": "play_77_sports_court",
+      "clubId": "0f2a3531-2c30-4a6e-9001-8f9118f5c52d",
+      "status": "active",
+      "address": "Mirafuentes street",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.45618,
+      "longitude": 125.8130671,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/0f2a3531-2c30-4a6e-9001-8f9118f5c52d/gallery/1783249949354-7vqsbx.jpg",
+      "googleMapsAddress": null,
+      "totalCourts": 2,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "3a533532-f87b-4bb6-89b2-1743ee6926db"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "0eb60e71-9426-4681-8e82-e2417279ae05"
+        }
+      ],
+      "minPrice": 150,
+      "maxPrice": 250,
+      "operatingHoursStart": "08:00:00",
+      "operatingHoursEnd": "13:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/play-77-sports-court",
+      "warnings": []
+    },
+    {
+      "name": "Sam's Pickleball Court",
+      "slug": "sam-s-pickleball-court",
+      "parserName": "sam_s_pickleball_court",
+      "clubId": "5f444224-425f-40a1-b31c-7398e1761d54",
+      "status": "active",
+      "address": "Prk Tandang Sora 2-A, Brgy Canocotan",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.42463248,
+      "longitude": 125.78674057,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/5f444224-425f-40a1-b31c-7398e1761d54/gallery/1789393950322-y58ro2.jpg",
+      "googleMapsAddress": null,
+      "totalCourts": 3,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "712f915b-8824-4b95-b1a4-045f76dd476e"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "e1f2dfcf-c77d-4340-994c-f9d0f38f19ea"
+        },
+        {
+          "number": 3,
+          "type": "indoor",
+          "id": "d61ff0ea-fe95-4378-b66e-3b463c46f137"
+        }
+      ],
+      "minPrice": 230,
+      "maxPrice": 275,
+      "operatingHoursStart": "06:00:00",
+      "operatingHoursEnd": "17:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/sam-s-pickleball-court",
+      "warnings": []
+    },
+    {
+      "name": "The LOB",
+      "slug": "the-lob",
+      "parserName": "the_lob",
+      "clubId": "dcacb834-8a75-46d7-8b84-fcbf58b31e0e",
+      "status": "active",
+      "address": "1099 Purok Talisay, Brgy. Magugpo West",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.45966,
+      "longitude": 125.809628,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/dcacb834-8a75-46d7-8b84-fcbf58b31e0e/gallery/1790815933181-5fqlk.jpg",
+      "googleMapsAddress": "https://maps.app.goo.gl/LWZXPRHFDU5Qw4JP8",
+      "totalCourts": 4,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "03d1c909-ac14-4473-9e8c-c955a84780f0"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "758cd988-3c92-4903-9f30-2036d5b701e6"
+        },
+        {
+          "number": 3,
+          "type": "indoor",
+          "id": "ad7e3cd4-2f24-4cbe-b297-7bf3c62eb460"
+        },
+        {
+          "number": 4,
+          "type": "indoor",
+          "id": "a307aee6-fb69-4a41-87f4-946994bdfac6"
+        }
+      ],
+      "minPrice": 0,
+      "maxPrice": 300,
+      "operatingHoursStart": "05:00:00",
+      "operatingHoursEnd": "23:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/the-lob",
+      "warnings": []
+    },
+    {
+      "name": "The Pinkle Zone🩷",
+      "slug": "the-pinkle-zone",
+      "parserName": "the_pinkle_zone",
+      "clubId": "a8c1850e-dc4b-4f82-ae62-8c6e3dca14f3",
+      "status": "active",
+      "address": "Brgy Mankilam",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.45509935,
+      "longitude": 125.79592836,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/a8c1850e-dc4b-4f82-ae62-8c6e3dca14f3/avatar_1781280332877.png",
+      "googleMapsAddress": null,
+      "totalCourts": 3,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "96f26960-18fb-4960-82eb-83a903b19e4f"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "5cdffe96-ad29-4d7f-9bb9-fd66b0ed0623"
+        },
+        {
+          "number": 3,
+          "type": "indoor",
+          "id": "64d7e881-b98b-4d8b-b814-25d97114496d"
+        }
+      ],
+      "minPrice": 135,
+      "maxPrice": 300,
+      "operatingHoursStart": "05:00:00",
+      "operatingHoursEnd": "17:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/the-pinkle-zone",
+      "warnings": []
+    },
+    {
+      "name": "Williams Pickle Hub",
+      "slug": "williams-tagum",
+      "parserName": "williams_tagum",
+      "clubId": "27d52c28-b993-42a0-a465-b23f28ce03a1",
+      "status": "active",
+      "address": "Pioneer Avenue Mankilam",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.45779546,
+      "longitude": 125.79029672,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/27d52c28-b993-42a0-a465-b23f28ce03a1/gallery/1784641456846-cbttai.jpg",
+      "googleMapsAddress": null,
+      "totalCourts": 2,
+      "courtType": "indoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "indoor",
+          "id": "8f5c7930-2df7-4943-a3f0-88c078b99be9"
+        },
+        {
+          "number": 2,
+          "type": "indoor",
+          "id": "bf871fbe-f2b7-4664-b2b7-3a25d55953e6"
+        }
+      ],
+      "minPrice": 300,
+      "maxPrice": 400,
+      "operatingHoursStart": "08:00:00",
+      "operatingHoursEnd": "22:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "active",
+      "sourceUrl": "https://picklehub.ph/williams-tagum",
+      "warnings": []
+    },
+    {
+      "name": "Court Uno - Pickleball Club Tagum",
+      "slug": "",
+      "parserName": "",
+      "clubId": "854192ce-189a-40e9-9455-91927898447b",
+      "status": "review",
+      "address": "Prk 6 Campo 4 Brgy San Miguel",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.44355653,
+      "longitude": 125.7761786,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/854192ce-189a-40e9-9455-91927898447b/avatar_1785583874957.png",
+      "googleMapsAddress": null,
+      "totalCourts": 1,
+      "courtType": "indoor",
+      "physicalCourts": [],
+      "minPrice": 150,
+      "maxPrice": 150,
+      "operatingHoursStart": "00:00:00",
+      "operatingHoursEnd": "00:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "coming_soon",
+      "sourceUrl": "https://picklehub.ph/book",
+      "warnings": [
+        "Missing PickleHub slug",
+        "Bootstrap data unavailable"
+      ]
+    },
+    {
+      "name": "D' Golden Pickle ",
+      "slug": "",
+      "parserName": "",
+      "clubId": "0edc0dd6-17c1-487d-84f0-7916ded551f5",
+      "status": "review",
+      "address": "Purok Garcia ",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.46719237,
+      "longitude": 125.79314421,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/0edc0dd6-17c1-487d-84f0-7916ded551f5/avatar_1784795619795.png",
+      "googleMapsAddress": null,
+      "totalCourts": 6,
+      "courtType": "indoor",
+      "physicalCourts": [],
+      "minPrice": 300,
+      "maxPrice": 300,
+      "operatingHoursStart": "07:00:00",
+      "operatingHoursEnd": "02:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "coming_soon",
+      "sourceUrl": "https://picklehub.ph/book",
+      "warnings": [
+        "Missing PickleHub slug",
+        "Bootstrap data unavailable"
+      ]
+    },
+    {
+      "name": "Dink United Pickleball ",
+      "slug": "",
+      "parserName": "",
+      "clubId": "367c9c35-9040-4335-ac28-5e5d60a40010",
+      "status": "review",
+      "address": "Ursua Village, Brgy. Visayan Village",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.43436578,
+      "longitude": 125.80479398,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/367c9c35-9040-4335-ac28-5e5d60a40010/avatar_1790582982467.png",
+      "googleMapsAddress": null,
+      "totalCourts": 3,
+      "courtType": "indoor",
+      "physicalCourts": [],
+      "minPrice": 300,
+      "maxPrice": 300,
+      "operatingHoursStart": "07:00:00",
+      "operatingHoursEnd": "00:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "coming_soon",
+      "sourceUrl": "https://picklehub.ph/book",
+      "warnings": [
+        "Missing PickleHub slug",
+        "Bootstrap data unavailable"
+      ]
+    },
+    {
+      "name": "DINKER'S HIDE ",
+      "slug": "",
+      "parserName": "",
+      "clubId": "cd4ad926-620c-4aa7-a29d-fb7dff98a3db",
+      "status": "review",
+      "address": "Purok Pag asa Mangga Visayan Village Tagum city",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.4358608,
+      "longitude": 125.8089146,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/cd4ad926-620c-4aa7-a29d-fb7dff98a3db/gallery/1788499397215-sm2kz5.jpg",
+      "googleMapsAddress": null,
+      "totalCourts": 1,
+      "courtType": "indoor",
+      "physicalCourts": [],
+      "minPrice": 180,
+      "maxPrice": 230,
+      "operatingHoursStart": "06:00:00",
+      "operatingHoursEnd": "23:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "coming_soon",
+      "sourceUrl": "https://picklehub.ph/book",
+      "warnings": [
+        "Missing PickleHub slug",
+        "Bootstrap data unavailable"
+      ]
+    },
+    {
+      "name": "LOOP",
+      "slug": "",
+      "parserName": "",
+      "clubId": "6d08e6c7-e7dc-44f3-8756-61028a5cb1f9",
+      "status": "review",
+      "address": "Purok Malinawon 2, Brgy Magugpo East",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.44521394,
+      "longitude": 125.81585815,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/6d08e6c7-e7dc-44f3-8756-61028a5cb1f9/avatar_1789237443314.png",
+      "googleMapsAddress": null,
+      "totalCourts": 4,
+      "courtType": "indoor",
+      "physicalCourts": [],
+      "minPrice": 315,
+      "maxPrice": 325,
+      "operatingHoursStart": "06:00:00",
+      "operatingHoursEnd": "22:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "coming_soon",
+      "sourceUrl": "https://picklehub.ph/book",
+      "warnings": [
+        "Missing PickleHub slug",
+        "Bootstrap data unavailable"
+      ]
+    },
+    {
+      "name": "Net N' Paddle",
+      "slug": "",
+      "parserName": "",
+      "clubId": "e2bd1268-d7f7-4a58-a786-a1f2cc61de6a",
+      "status": "review",
+      "address": "Mirafuentes St. Magugpo Nort, Tagum City, Davao del Norte, 8100 ",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.45676597,
+      "longitude": 125.81196667,
+      "image": null,
+      "googleMapsAddress": null,
+      "totalCourts": 3,
+      "courtType": "outdoor",
+      "physicalCourts": [],
+      "minPrice": 200,
+      "maxPrice": 250,
+      "operatingHoursStart": "15:00:00",
+      "operatingHoursEnd": "18:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "coming_soon",
+      "sourceUrl": "https://picklehub.ph/book",
+      "warnings": [
+        "Missing PickleHub slug",
+        "Bootstrap data unavailable"
+      ]
+    },
+    {
+      "name": "Pickle Corner",
+      "slug": "",
+      "parserName": "",
+      "clubId": "9ff0ee6e-462c-44fb-8020-a8c18e4d0d32",
+      "status": "review",
+      "address": "Purok 3, Barangay La Filipina",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.47460788,
+      "longitude": 125.80608125,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/9ff0ee6e-462c-44fb-8020-a8c18e4d0d32/avatar_1784811161934.png",
+      "googleMapsAddress": null,
+      "totalCourts": 2,
+      "courtType": "indoor",
+      "physicalCourts": [],
+      "minPrice": 250,
+      "maxPrice": 300,
+      "operatingHoursStart": "07:00:00",
+      "operatingHoursEnd": "23:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "coming_soon",
+      "sourceUrl": "https://picklehub.ph/book",
+      "warnings": [
+        "Missing PickleHub slug",
+        "Bootstrap data unavailable"
+      ]
+    },
+    {
+      "name": "PICKLEDOME TGM",
+      "slug": "",
+      "parserName": "",
+      "clubId": "4f2f75ed-4ff0-4924-b6ac-96f8abdab985",
+      "status": "review",
+      "address": "Osmena Street",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.44366505,
+      "longitude": 125.80441581,
+      "image": null,
+      "googleMapsAddress": null,
+      "totalCourts": 3,
+      "courtType": "indoor",
+      "physicalCourts": [],
+      "minPrice": 250,
+      "maxPrice": 300,
+      "operatingHoursStart": "08:00:00",
+      "operatingHoursEnd": "17:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "coming_soon",
+      "sourceUrl": "https://picklehub.ph/book",
+      "warnings": [
+        "Missing PickleHub slug",
+        "Bootstrap data unavailable"
+      ]
+    },
+    {
+      "name": "PickleV",
+      "slug": "picklev",
+      "parserName": "picklev",
+      "clubId": "5e465e0d-6c1c-453e-bedf-45a97e7f5bda",
+      "status": "active",
+      "address": "National Highway, Purok Cafe, Visayan Village",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.42713297,
+      "longitude": 125.79331198,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/5e465e0d-6c1c-453e-bedf-45a97e7f5bda/avatar_1790597855184.png",
+      "googleMapsAddress": null,
+      "totalCourts": 3,
+      "courtType": "outdoor",
+      "physicalCourts": [
+        {
+          "number": 1,
+          "type": "outdoor",
+          "id": "ee5e9d93-129f-499a-b21a-345a2b30f3fb"
+        },
+        {
+          "number": 2,
+          "type": "outdoor",
+          "id": "35f6210e-259b-48b1-94fd-cac96fc29eec"
+        },
+        {
+          "number": 3,
+          "type": "outdoor",
+          "id": "5a163f49-0a92-4f98-bbd0-01e3f1f3ac36"
+        }
+      ],
+      "minPrice": 265,
+      "maxPrice": 315,
+      "operatingHoursStart": "00:00:00",
+      "operatingHoursEnd": "17:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "coming_soon",
+      "sourceUrl": "https://picklehub.ph/picklev",
+      "warnings": []
+    },
+    {
+      "name": "Smash & Dink",
+      "slug": "",
+      "parserName": "",
+      "clubId": "1d2e7bd2-5915-4b51-88d4-6c48b7c39f91",
+      "status": "review",
+      "address": "Near Coca-Cola Bottlers Philippines, Inc. Tagum Warehouse, In Magdum, Tagum",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.46263874,
+      "longitude": 125.82245984,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/1d2e7bd2-5915-4b51-88d4-6c48b7c39f91/gallery/1788017239081-872j4.jpg",
+      "googleMapsAddress": null,
+      "totalCourts": 2,
+      "courtType": "indoor",
+      "physicalCourts": [],
+      "minPrice": 300,
+      "maxPrice": 350,
+      "operatingHoursStart": "06:00:00",
+      "operatingHoursEnd": "12:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "coming_soon",
+      "sourceUrl": "https://picklehub.ph/book",
+      "warnings": [
+        "Missing PickleHub slug",
+        "Bootstrap data unavailable"
+      ]
+    },
+    {
+      "name": "SmashZone Pickleball Tagum",
+      "slug": "",
+      "parserName": "",
+      "clubId": "e8d677ac-2d2f-4eca-aa7c-05ae6204ecad",
+      "status": "review",
+      "address": "La Filipina",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.47114303,
+      "longitude": 125.81755076,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/e8d677ac-2d2f-4eca-aa7c-05ae6204ecad/gallery/1785901521346-pb9p32.jpg",
+      "googleMapsAddress": "https://maps.app.goo.gl/ioseGC166DP9ktEBA?g_st=ic",
+      "totalCourts": 2,
+      "courtType": "indoor",
+      "physicalCourts": [],
+      "minPrice": 200,
+      "maxPrice": 280,
+      "operatingHoursStart": "08:00:00",
+      "operatingHoursEnd": "22:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "coming_soon",
+      "sourceUrl": "https://picklehub.ph/book",
+      "warnings": [
+        "Missing PickleHub slug",
+        "Bootstrap data unavailable"
+      ]
+    },
+    {
+      "name": "South Flicked",
+      "slug": "",
+      "parserName": "",
+      "clubId": "ae30b77c-8ee5-49ae-b096-960598ac725a",
+      "status": "review",
+      "address": "Purok 28 Kawayan, Madaum ",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.41134424,
+      "longitude": 125.79653312,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/ae30b77c-8ee5-49ae-b096-960598ac725a/gallery/1789195146903-pvpac.jpg",
+      "googleMapsAddress": null,
+      "totalCourts": 2,
+      "courtType": "indoor",
+      "physicalCourts": [],
+      "minPrice": 500,
+      "maxPrice": 500,
+      "operatingHoursStart": "08:00:00",
+      "operatingHoursEnd": "00:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "coming_soon",
+      "sourceUrl": "https://picklehub.ph/book",
+      "warnings": [
+        "Missing PickleHub slug",
+        "Bootstrap data unavailable"
+      ]
+    },
+    {
+      "name": "The Good Dinks",
+      "slug": "",
+      "parserName": "",
+      "clubId": "94cdb2c6-6630-4d37-8896-23d9ca929901",
+      "status": "review",
+      "address": "Purok 3, Magdum",
+      "city": "Tagum City",
+      "province": "Davao del Norte",
+      "latitude": 7.46858047,
+      "longitude": 125.83296457,
+      "image": "https://odimuhhyzyzdymujymzy.supabase.co/storage/v1/object/public/club-images/94cdb2c6-6630-4d37-8896-23d9ca929901/avatar_1786951699961.png",
+      "googleMapsAddress": null,
+      "totalCourts": 3,
+      "courtType": "indoor",
+      "physicalCourts": [],
+      "minPrice": 300,
+      "maxPrice": 300,
+      "operatingHoursStart": "06:00:00",
+      "operatingHoursEnd": "23:00:00",
+      "availableDays": [
+        "friday",
+        "monday",
+        "saturday",
+        "sunday",
+        "thursday",
+        "tuesday",
+        "wednesday"
+      ],
+      "visibilityStatus": "coming_soon",
+      "sourceUrl": "https://picklehub.ph/book",
+      "warnings": [
+        "Missing PickleHub slug",
+        "Bootstrap data unavailable"
+      ]
+    }
+  ]
+}
